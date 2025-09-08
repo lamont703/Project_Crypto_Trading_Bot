@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Watch - Crypto Trading Bot</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .market-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: var(--spacing-xs);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+            border-color: var(--primary-color);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .market-table {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .table {
+            margin: 0;
+        }
+        
+        .table th {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        
+        .table th:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .sort-indicator {
+            margin-left: var(--spacing-xs);
+            opacity: 0.5;
+        }
+        
+        .sort-indicator.active {
+            opacity: 1;
+        }
+        
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .asset-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+        
+        .asset-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .asset-name {
+            font-weight: 600;
+            font-size: var(--font-size-base);
+        }
+        
+        .asset-symbol {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .price-cell {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+        }
+        
+        .change-cell {
+            font-weight: 600;
+        }
+        
+        .change-positive {
+            color: var(--success-color);
+        }
+        
+        .change-negative {
+            color: var(--danger-color);
+        }
+        
+        .volume-cell, .market-cap-cell {
+            color: var(--text-secondary);
+        }
+        
+        .chart-button {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-xs);
+            transition: all var(--transition-fast);
+        }
+        
+        .chart-button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .chart-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: var(--spacing-lg);
+            transform: translateY(100%);
+            transition: transform var(--transition-normal);
+            z-index: var(--z-modal);
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .chart-drawer.open {
+            transform: translateY(0);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+        }
+        
+        .chart-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: var(--spacing-xs);
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .info-card {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .info-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-state-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .chart-drawer {
+                position: relative;
+                transform: none;
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius-md);
+                margin-top: var(--spacing-lg);
+                max-height: none;
+            }
+            
+            .chart-drawer.open {
+                transform: none;
+            }
+            
+            .chart-info {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <h1>📈 Market Watch</h1>
+        </div>
+        
+        <!-- Market Controls -->
+        <div class="market-controls">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Assets</button>
+                <button class="filter-btn" data-filter="top10">Top 10</button>
+                <button class="filter-btn" data-filter="gainers">Gainers</button>
+                <button class="filter-btn" data-filter="losers">Losers</button>
+                <button class="filter-btn" data-filter="high-volume">High Volume</button>
+            </div>
+            <input type="text" class="form-control search-box" placeholder="Search cryptocurrencies..." id="searchInput">
+        </div>
+        
+        <!-- Market Table -->
+        <div class="market-table">
+            <div class="table-header">
+                <h2 class="table-title">Cryptocurrency Prices</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table" id="marketTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="asset">
+                                Asset <span class="sort-indicator">↕</span>
+                            </th>
+                            <th data-sort="price">
+                                Price <span class="sort-indicator">↕</span>
+                            </th>
+                            <th data-sort="change24h">
+                                24h Change <span class="sort-indicator">↕</span>
+                            </th>
+                            <th data-sort="volume24h">
+                                Volume <span class="sort-indicator">↕</span>
+                            </th>
+                            <th data-sort="marketCap">
+                                Market Cap <span class="sort-indicator">↕</span>
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marketTableBody">
+                        <!-- Market data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Chart Drawer -->
+        <div class="chart-drawer" id="chartDrawer">
+            <div class="chart-header">
+                <h3 class="chart-title" id="chartTitle">Asset Price Chart</h3>
+                <button class="chart-close" onclick="closeChart()">×</button>
+            </div>
+            <div class="chart-container" id="chartContainer">
+                <!-- Chart will be rendered here -->
+            </div>
+            <div class="chart-info" id="chartInfo">
+                <!-- Chart info will be populated here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item" data-screen="dashboard">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item active" data-screen="market">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item" data-screen="strategy">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item" data-screen="trade">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item" data-screen="settings">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Market Watch specific functionality
+        let currentData = [];
+        let filteredData = [];
+        let sortColumn = 'marketCap';
+        let sortDirection = 'desc';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            const app = window.cryptoBotApp;
+            
+            // Load market data
+            loadMarketData(app);
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Set up auto-refresh
+            setInterval(() => {
+                loadMarketData(app);
+            }, 30000); // Refresh every 30 seconds
+        });
+        
+        function loadMarketData(app) {
+            const marketData = app.getMarketData();
+            currentData = marketData.tickers || [];
+            filteredData = [...currentData];
+            
+            renderMarketTable(app);
+        }
+        
+        function renderMarketTable(app) {
+            const tbody = document.getElementById('marketTableBody');
+            
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div class="empty-state-text">No market data available</div>
+                            <div class="empty-state-subtext">Please try again later</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filteredData.map(ticker => `
+                <tr>
+                    <td>
+                        <div class="asset-cell">
+                            <div class="asset-icon">${ticker.asset.charAt(0)}</div>
+                            <div class="asset-info">
+                                <div class="asset-name">${ticker.asset}</div>
+                                <div class="asset-symbol">${getAssetName(ticker.asset)}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="price-cell">${app.formatCurrency(ticker.price)}</td>
+                    <td class="change-cell ${ticker.change24h >= 0 ? 'change-positive' : 'change-negative'}">
+                        ${ticker.change24h >= 0 ? '+' : ''}${app.formatCurrency(ticker.change24h)} (${app.formatPercentage(ticker.change24hPercent)})
+                    </td>
+                    <td class="volume-cell">${formatVolume(ticker.volume24h)}</td>
+                    <td class="market-cap-cell">${formatMarketCap(ticker.marketCap)}</td>
+                    <td>
+                        <button class="chart-button" onclick="openChart('${ticker.asset}', '${app.formatCurrency(ticker.price)}')">
+                            Chart
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function getAssetName(symbol) {
+            const names = {
+                'BTC': 'Bitcoin',
+                'ETH': 'Ethereum',
+                'SOL': 'Solana',
+                'ADA': 'Cardano',
+                'DOT': 'Polkadot',
+                'MATIC': 'Polygon',
+                'AVAX': 'Avalanche',
+                'LINK': 'Chainlink',
+                'UNI': 'Uniswap',
+                'AAVE': 'Aave'
+            };
+            return names[symbol] || symbol;
+        }
+        
+        function formatVolume(volume) {
+            if (volume >= 1e9) {
+                return `$${(volume / 1e9).toFixed(1)}B`;
+            } else if (volume >= 1e6) {
+                return `$${(volume / 1e6).toFixed(1)}M`;
+            } else if (volume >= 1e3) {
+                return `$${(volume / 1e3).toFixed(1)}K`;
+            }
+            return `$${volume.toFixed(0)}`;
+        }
+        
+        function formatMarketCap(marketCap) {
+            if (marketCap >= 1e12) {
+                return `$${(marketCap / 1e12).toFixed(1)}T`;
+            } else if (marketCap >= 1e9) {
+                return `$${(marketCap / 1e9).toFixed(1)}B`;
+            } else if (marketCap >= 1e6) {
+                return `$${(marketCap / 1e6).toFixed(1)}M`;
+            }
+            return `$${marketCap.toFixed(0)}`;
+        }
+        
+        function setupEventListeners() {
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    applyFilter(filter);
+                });
+            });
+            
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                filteredData = currentData.filter(ticker => 
+                    ticker.asset.toLowerCase().includes(query) ||
+                    getAssetName(ticker.asset).toLowerCase().includes(query)
+                );
+                renderMarketTable(window.cryptoBotApp);
+            });
+            
+            // Table sorting
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', function() {
+                    const column = this.dataset.sort;
+                    
+                    if (sortColumn === column) {
+                        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        sortColumn = column;
+                        sortDirection = 'asc';
+                    }
+                    
+                    // Update sort indicators
+                    document.querySelectorAll('.sort-indicator').forEach(indicator => {
+                        indicator.classList.remove('active');
+                        indicator.textContent = '↕';
+                    });
+                    
+                    const currentIndicator = this.querySelector('.sort-indicator');
+                    currentIndicator.classList.add('active');
+                    currentIndicator.textContent = sortDirection === 'asc' ? '↑' : '↓';
+                    
+                    // Sort data
+                    filteredData.sort((a, b) => {
+                        let aVal = a[column];
+                        let bVal = b[column];
+                        
+                        if (column === 'asset') {
+                            aVal = a.asset;
+                            bVal = b.asset;
+                        }
+                        
+                        if (typeof aVal === 'string') {
+                            aVal = aVal.toLowerCase();
+                            bVal = bVal.toLowerCase();
+                        }
+                        
+                        if (sortDirection === 'asc') {
+                            return aVal > bVal ? 1 : -1;
+                        } else {
+                            return aVal < bVal ? 1 : -1;
+                        }
+                    });
+                    
+                    renderMarketTable(window.cryptoBotApp);
+                });
+            });
+        }
+        
+        function applyFilter(filter) {
+            switch (filter) {
+                case 'all':
+                    filteredData = [...currentData];
+                    break;
+                case 'top10':
+                    filteredData = currentData.slice(0, 10);
+                    break;
+                case 'gainers':
+                    filteredData = currentData.filter(ticker => ticker.change24h > 0);
+                    break;
+                case 'losers':
+                    filteredData = currentData.filter(ticker => ticker.change24h < 0);
+                    break;
+                case 'high-volume':
+                    const avgVolume = currentData.reduce((sum, ticker) => sum + ticker.volume24h, 0) / currentData.length;
+                    filteredData = currentData.filter(ticker => ticker.volume24h > avgVolume * 1.5);
+                    break;
+            }
+            renderMarketTable(window.cryptoBotApp);
+        }
+        
+        function openChart(asset, currentPrice) {
+            const drawer = document.getElementById('chartDrawer');
+            const title = document.getElementById('chartTitle');
+            const container = document.getElementById('chartContainer');
+            const info = document.getElementById('chartInfo');
+            
+            title.textContent = `${asset} Price Chart`;
+            
+            // Get price history for the asset
+            const marketData = window.cryptoBotApp.getMarketData();
+            const priceHistory = marketData.priceHistory[asset] || [];
+            
+            // Render chart
+            if (priceHistory.length > 0) {
+                window.cryptoBotApp.createCanvasChart(container, priceHistory, {
+                    type: 'line',
+                    color: '#007bff'
+                });
+            } else {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div class="empty-state-text">No chart data available</div>
+                        <div class="empty-state-subtext">Price history for ${asset} is not available</div>
+                    </div>
+                `;
+            }
+            
+            // Update chart info
+            const ticker = currentData.find(t => t.asset === asset);
+            if (ticker) {
+                info.innerHTML = `
+                    <div class="info-card">
+                        <div class="info-label">24h High</div>
+                        <div class="info-value">${window.cryptoBotApp.formatCurrency(ticker.price * 1.02)}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">24h Low</div>
+                        <div class="info-value">${window.cryptoBotApp.formatCurrency(ticker.price * 0.98)}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">24h Volume</div>
+                        <div class="info-value">${formatVolume(ticker.volume24h)}</div>
+                    </div>
+                `;
+            }
+            
+            drawer.classList.add('open');
+        }
+        
+        function closeChart() {
+            const drawer = document.getElementById('chartDrawer');
+            drawer.classList.remove('open');
+        }
+    </script>
+</body>
+</html>

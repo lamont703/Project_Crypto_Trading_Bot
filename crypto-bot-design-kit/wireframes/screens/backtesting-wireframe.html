@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtesting Wireframe - Crypto Trading Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .wireframe-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .screen-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .app-bar {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .app-bar h2 {
+            font-size: 18px;
+        }
+        
+        .backtest-config {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+        }
+        
+        .config-section {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .run-backtest-button {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+        
+        .run-backtest-button:hover {
+            background: #218838;
+        }
+        
+        .results-section {
+            margin-bottom: 30px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .results-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .export-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+            text-align: center;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .metric-value.positive {
+            color: #28a745;
+        }
+        
+        .metric-value.negative {
+            color: #dc3545;
+        }
+        
+        .chart-section {
+            margin-bottom: 30px;
+        }
+        
+        .chart-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #ccc;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .chart-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .trades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .trades-table th {
+            background: #f8f9fa;
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .trades-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .trades-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .pnl-positive {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .pnl-negative {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .tab-item.active {
+            color: #007bff;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .body-padding {
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .tab-bar {
+                display: none;
+            }
+            
+            .body-padding {
+                padding-bottom: 20px;
+            }
+            
+            .backtest-config {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .chart-info {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        .wireframe-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .wireframe-note h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .wireframe-note p {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Backtesting Wireframe</h1>
+            <div class="breadcrumb">
+                <a href="../../index.html">← Back to Hub</a> / Wireframes / Backtesting
+            </div>
+        </div>
+        
+        <div class="wireframe-note">
+            <h4>Wireframe Note</h4>
+            <p>This is a low-fidelity wireframe showing the structure and layout of the Backtesting screen. Users can test strategies against historical data and view performance metrics.</p>
+        </div>
+        
+        <div class="wireframe-content">
+            <div class="screen-title">Backtesting Screen</div>
+            
+            <!-- App Bar -->
+            <div class="app-bar">
+                <h2>📊 Backtesting</h2>
+            </div>
+            
+            <!-- Backtest Configuration -->
+            <div class="backtest-config">
+                <div class="config-section">
+                    <div class="section-title">Strategy Selection</div>
+                    <div class="form-group">
+                        <label class="form-label">Strategy</label>
+                        <select class="form-select">
+                            <option>BTC Range Trading</option>
+                            <option>ETH Momentum Strategy</option>
+                            <option>SOL Scalping</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Asset</label>
+                        <select class="form-select">
+                            <option>BTC</option>
+                            <option>ETH</option>
+                            <option>SOL</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="section-title">Test Parameters</div>
+                    <div class="form-group">
+                        <label class="form-label">Initial Capital</label>
+                        <input type="number" class="form-input" placeholder="10000" value="10000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Timeframe</label>
+                        <select class="form-select">
+                            <option>1h</option>
+                            <option>4h</option>
+                            <option>1d</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date Range</label>
+                        <div class="date-range">
+                            <input type="date" class="form-input" value="2024-01-01">
+                            <input type="date" class="form-input" value="2024-01-20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="run-backtest-button">🚀 Run Backtest</button>
+            
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="results-header">
+                    <div class="results-title">Backtest Results</div>
+                    <button class="export-button">Export Results</button>
+                </div>
+                
+                <!-- Performance Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Return</div>
+                        <div class="metric-value positive">+15.0%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Max Drawdown</div>
+                        <div class="metric-value negative">-8.2%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Win Rate</div>
+                        <div class="metric-value">65%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Profit Factor</div>
+                        <div class="metric-value">1.67</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Sharpe Ratio</div>
+                        <div class="metric-value">1.45</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Trades</div>
+                        <div class="metric-value">20</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Avg Win</div>
+                        <div class="metric-value positive">$250.00</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Avg Loss</div>
+                        <div class="metric-value negative">-$150.00</div>
+                    </div>
+                </div>
+                
+                <!-- Performance Chart -->
+                <div class="chart-section">
+                    <div class="section-title">Performance Chart</div>
+                    <div class="chart-placeholder">
+                        <div style="text-align: center; color: #666;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">📈</div>
+                            <div style="font-size: 18px; margin-bottom: 10px;">Portfolio Value Over Time</div>
+                            <div style="font-size: 14px;">This would show a line chart of portfolio value from $10,000 to $11,500</div>
+                        </div>
+                    </div>
+                    <div class="chart-info">
+                        <div class="info-item">
+                            <div class="info-label">Start Value</div>
+                            <div class="info-value">$10,000</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">End Value</div>
+                            <div class="info-value">$11,500</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Peak Value</div>
+                            <div class="info-value">$12,100</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Lowest Value</div>
+                            <div class="info-value">$9,180</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Avg Time in Trade</div>
+                            <div class="info-value">4.2h</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Best Trade</div>
+                            <div class="info-value">+$450</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trade History -->
+                <div class="section-title">Trade History</div>
+                <table class="trades-table">
+                    <thead>
+                        <tr>
+                            <th>Entry Time</th>
+                            <th>Exit Time</th>
+                            <th>Asset</th>
+                            <th>Side</th>
+                            <th>Entry Price</th>
+                            <th>Exit Price</th>
+                            <th>P&L</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-01-05 10:30</td>
+                            <td>2024-01-05 14:22</td>
+                            <td>BTC</td>
+                            <td>Long</td>
+                            <td>$44,500</td>
+                            <td>$47,000</td>
+                            <td class="pnl-positive">+$250.00</td>
+                            <td>3.9h</td>
+                        </tr>
+                        <tr>
+                            <td>2024-01-06 09:15</td>
+                            <td>2024-01-06 11:45</td>
+                            <td>ETH</td>
+                            <td>Long</td>
+                            <td>$2,800</td>
+                            <td>$2,920</td>
+                            <td class="pnl-positive">+$180.00</td>
+                            <td>2.5h</td>
+                        </tr>
+                        <tr>
+                            <td>2024-01-07 14:20</td>
+                            <td>2024-01-07 16:30</td>
+                            <td>SOL</td>
+                            <td>Long</td>
+                            <td>$98.00</td>
+                            <td>$88.50</td>
+                            <td class="pnl-negative">-$75.00</td>
+                            <td>2.2h</td>
+                        </tr>
+                        <tr>
+                            <td>2024-01-08 08:00</td>
+                            <td>2024-01-08 12:15</td>
+                            <td>BTC</td>
+                            <td>Long</td>
+                            <td>$45,200</td>
+                            <td>$46,800</td>
+                            <td class="pnl-positive">+$160.00</td>
+                            <td>4.3h</td>
+                        </tr>
+                        <tr>
+                            <td>2024-01-09 13:30</td>
+                            <td>2024-01-09 15:45</td>
+                            <td>ETH</td>
+                            <td>Long</td>
+                            <td>$2,950</td>
+                            <td>$3,100</td>
+                            <td class="pnl-positive">+$225.00</td>
+                            <td>2.3h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item active">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add basic interactivity for wireframe demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab bar navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Run backtest button
+            const runButton = document.querySelector('.run-backtest-button');
+            runButton.addEventListener('click', function() {
+                alert('This would run the backtest and display results');
+            });
+            
+            // Export button
+            const exportButton = document.querySelector('.export-button');
+            exportButton.addEventListener('click', function() {
+                alert('This would export the backtest results');
+            });
+            
+            // Table sorting (basic demonstration)
+            const tableHeaders = document.querySelectorAll('.trades-table th');
+            tableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    alert('This would sort by: ' + this.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

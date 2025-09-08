@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Execution Wireframe - Crypto Trading Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .wireframe-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .screen-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .app-bar {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .app-bar h2 {
+            font-size: 18px;
+        }
+        
+        .order-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .toggle-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .toggle-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+        }
+        
+        .toggle-option.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .toggle-option h4 {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .toggle-option p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .order-preview {
+            background: #fff;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .preview-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .preview-label {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .preview-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .preview-value.positive {
+            color: #28a745;
+        }
+        
+        .preview-value.negative {
+            color: #dc3545;
+        }
+        
+        .order-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .action-button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .preview-button {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .execute-button {
+            background: #28a745;
+            color: white;
+        }
+        
+        .cancel-button {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .activity-feed {
+            background: #f8f9fa;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+        }
+        
+        .feed-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .feed-item {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .feed-action {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .feed-time {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .feed-details {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .tab-item.active {
+            color: #007bff;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .body-padding {
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .tab-bar {
+                display: none;
+            }
+            
+            .body-padding {
+                padding-bottom: 20px;
+            }
+            
+            .order-form {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .order-actions {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .wireframe-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .wireframe-note h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .wireframe-note p {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Trade Execution Wireframe</h1>
+            <div class="breadcrumb">
+                <a href="../../index.html">← Back to Hub</a> / Wireframes / Trade Execution
+            </div>
+        </div>
+        
+        <div class="wireframe-note">
+            <h4>Wireframe Note</h4>
+            <p>This is a low-fidelity wireframe showing the structure and layout of the Trade Execution screen. Users can place orders with risk management settings and preview before execution.</p>
+        </div>
+        
+        <div class="wireframe-content">
+            <div class="screen-title">Trade Execution Screen</div>
+            
+            <!-- App Bar -->
+            <div class="app-bar">
+                <h2>💹 Trade Execution</h2>
+            </div>
+            
+            <!-- Order Form -->
+            <div class="order-form">
+                <!-- Order Details -->
+                <div class="form-section">
+                    <div class="section-title">Order Details</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Asset</label>
+                        <select class="form-select">
+                            <option>BTC</option>
+                            <option>ETH</option>
+                            <option>SOL</option>
+                            <option>ADA</option>
+                            <option>DOT</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Order Side</label>
+                        <div class="toggle-group">
+                            <div class="toggle-option selected">
+                                <h4>Buy</h4>
+                                <p>Long Position</p>
+                            </div>
+                            <div class="toggle-option">
+                                <h4>Sell</h4>
+                                <p>Short Position</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Order Type</label>
+                        <select class="form-select">
+                            <option>Market Order</option>
+                            <option>Limit Order</option>
+                            <option>Stop Order</option>
+                            <option>Stop Limit Order</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Size</label>
+                        <input type="number" class="form-input" placeholder="0.5" step="0.01">
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">BTC amount</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Price (Limit Orders)</label>
+                        <input type="number" class="form-input" placeholder="45000" step="0.01">
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">USD per BTC</div>
+                    </div>
+                </div>
+                
+                <!-- Risk Management -->
+                <div class="form-section">
+                    <div class="section-title">Risk Management</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Stop Loss</label>
+                        <input type="number" class="form-input" placeholder="42750" step="0.01">
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">-5% from entry</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Take Profit</label>
+                        <input type="number" class="form-input" placeholder="49500" step="0.01">
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">+10% from entry</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Time in Trade</label>
+                        <select class="form-select">
+                            <option>1 Hour</option>
+                            <option>4 Hours</option>
+                            <option>24 Hours</option>
+                            <option>1 Week</option>
+                            <option>Custom</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Convert to Stablecoin</label>
+                        <div class="toggle-group">
+                            <div class="toggle-option">
+                                <h4>USDT</h4>
+                                <p>Tether</p>
+                            </div>
+                            <div class="toggle-option">
+                                <h4>USDC</h4>
+                                <p>USD Coin</p>
+                            </div>
+                            <div class="toggle-option selected">
+                                <h4>None</h4>
+                                <p>Keep Asset</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Preview -->
+            <div class="order-preview">
+                <div class="preview-title">Order Preview</div>
+                <div class="preview-row">
+                    <div class="preview-label">Asset:</div>
+                    <div class="preview-value">BTC</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Side:</div>
+                    <div class="preview-value">Buy</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Type:</div>
+                    <div class="preview-value">Market Order</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Size:</div>
+                    <div class="preview-value">0.5 BTC</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Estimated Price:</div>
+                    <div class="preview-value">$45,100.00</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Total Value:</div>
+                    <div class="preview-value">$22,550.00</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Stop Loss:</div>
+                    <div class="preview-value">$42,750.00</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Take Profit:</div>
+                    <div class="preview-value">$49,500.00</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Time Limit:</div>
+                    <div class="preview-value">24 Hours</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Risk Amount:</div>
+                    <div class="preview-value negative">$1,175.00</div>
+                </div>
+            </div>
+            
+            <!-- Order Actions -->
+            <div class="order-actions">
+                <button class="action-button preview-button">📋 Preview Order</button>
+                <button class="action-button execute-button">✅ Execute Order (Mock)</button>
+                <button class="action-button cancel-button">❌ Cancel</button>
+            </div>
+            
+            <!-- Activity Feed -->
+            <div class="activity-feed">
+                <div class="feed-title">Recent Activity</div>
+                <div class="feed-item">
+                    <div class="feed-header">
+                        <div class="feed-action">Order Executed</div>
+                        <div class="feed-time">2 min ago</div>
+                    </div>
+                    <div class="feed-details">Bought 0.3 BTC at $45,100.00 - Order ID: #12345</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-header">
+                        <div class="feed-action">Position Opened</div>
+                        <div class="feed-time">5 min ago</div>
+                    </div>
+                    <div class="feed-details">ETH long position - Entry: $3,012.50 - Size: 2.0 ETH</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-header">
+                        <div class="feed-action">Stop Loss Hit</div>
+                        <div class="feed-time">15 min ago</div>
+                    </div>
+                    <div class="feed-details">SOL position closed at $88.50 - Loss: $75.00</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-header">
+                        <div class="feed-action">Take Profit Hit</div>
+                        <div class="feed-time">1 hour ago</div>
+                    </div>
+                    <div class="feed-details">BTC position closed at $47,000.00 - Profit: $250.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item active">
+            <div class="tab-icon">��</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add basic interactivity for wireframe demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab bar navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Order side toggle
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const group = this.parentElement;
+                    group.querySelectorAll('.toggle-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Action buttons
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('This would: ' + this.textContent);
+                });
+            });
+            
+            // Form inputs update preview
+            const formInputs = document.querySelectorAll('.form-input, .form-select');
+            formInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    alert('This would update the order preview');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

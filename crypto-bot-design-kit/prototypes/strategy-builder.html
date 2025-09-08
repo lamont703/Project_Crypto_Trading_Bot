@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy Builder - Crypto Trading Bot</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .strategy-form {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .risk-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .risk-option {
+            padding: var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            background-color: var(--bg-primary);
+            transition: all var(--transition-fast);
+        }
+        
+        .risk-option:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-secondary);
+        }
+        
+        .risk-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        .risk-option h4 {
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-size-lg);
+        }
+        
+        .risk-option p {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+        
+        .rules-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .add-rule-btn {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+        
+        .add-rule-btn:hover {
+            background-color: var(--success-hover);
+        }
+        
+        .rule-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+        }
+        
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .rule-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .rule-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .rule-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .rule-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .rule-btn.delete {
+            background-color: var(--danger-color);
+            color: var(--text-inverse);
+            border-color: var(--danger-color);
+        }
+        
+        .rule-btn.delete:hover {
+            background-color: var(--danger-hover);
+        }
+        
+        .rule-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .condition-section, .action-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+        }
+        
+        .section-label {
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-base);
+            color: var(--primary-color);
+        }
+        
+        .rule-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            align-items: end;
+        }
+        
+        .rule-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            align-items: end;
+        }
+        
+        .rule-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .strategy-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+        
+        .strategy-btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-height: 56px;
+        }
+        
+        .strategy-btn.save {
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        .strategy-btn.save:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .strategy-btn.test {
+            background-color: var(--info-color);
+            color: var(--text-inverse);
+        }
+        
+        .strategy-btn.test:hover {
+            background-color: var(--info-hover);
+        }
+        
+        .strategy-btn.activate {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+        }
+        
+        .strategy-btn.activate:hover {
+            background-color: var(--success-hover);
+        }
+        
+        .strategy-btn.delete {
+            background-color: var(--danger-color);
+            color: var(--text-inverse);
+        }
+        
+        .strategy-btn.delete:hover {
+            background-color: var(--danger-hover);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-state-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .rule-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .strategy-actions {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <h1>⚙️ Strategy Builder</h1>
+        </div>
+        
+        <!-- Strategy Configuration Form -->
+        <form class="strategy-form" data-form-type="strategy" id="strategyForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="strategyName">Strategy Name</label>
+                    <input type="text" class="form-control" id="strategyName" name="name" 
+                           placeholder="e.g., BTC Range Trading" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="maxPositionSize">Max Position Size</label>
+                    <input type="range" class="form-control" id="maxPositionSize" name="maxPositionSize" 
+                           min="0.01" max="0.5" step="0.01" value="0.1">
+                    <div class="text-center" id="positionSizeValue">10% of portfolio</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="strategyDescription">Description</label>
+                <textarea class="form-control" id="strategyDescription" name="description" 
+                          placeholder="Describe your trading strategy..." rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Risk Level</label>
+                <div class="risk-levels">
+                    <div class="risk-option" data-risk="conservative">
+                        <h4>Conservative</h4>
+                        <p>Low risk, steady returns</p>
+                    </div>
+                    <div class="risk-option selected" data-risk="moderate">
+                        <h4>Moderate</h4>
+                        <p>Balanced risk</p>
+                    </div>
+                    <div class="risk-option" data-risk="aggressive">
+                        <h4>Aggressive</h4>
+                        <p>High risk, high returns</p>
+                    </div>
+                </div>
+                <input type="hidden" name="riskLevel" value="moderate" id="riskLevelInput">
+            </div>
+        </form>
+        
+        <!-- Trading Rules Section -->
+        <div class="rules-section">
+            <div class="section-header">
+                <h2 class="section-title">Trading Rules</h2>
+                <button type="button" class="add-rule-btn" onclick="addNewRule()">
+                    + Add New Rule
+                </button>
+            </div>
+            <div id="rulesContainer">
+                <!-- Rules will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Strategy Actions -->
+        <div class="strategy-actions">
+            <button type="button" class="strategy-btn save" data-action="save-strategy">
+                💾 Save Strategy
+            </button>
+            <button type="button" class="strategy-btn test" data-action="test-strategy">
+                🧪 Test Strategy
+            </button>
+            <button type="button" class="strategy-btn activate" data-action="activate-strategy">
+                ▶️ Activate Strategy
+            </button>
+            <button type="button" class="strategy-btn delete" data-action="delete-strategy">
+                🗑️ Delete Strategy
+            </button>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item" data-screen="dashboard">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item" data-screen="market">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item active" data-screen="strategy">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item" data-screen="trade">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item" data-screen="settings">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Strategy Builder specific functionality
+        let ruleCounter = 0;
+        let currentRules = [];
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            const app = window.cryptoBotApp;
+            
+            // Load existing strategies
+            loadStrategies(app);
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        function loadStrategies(app) {
+            const strategies = app.getStrategies();
+            
+            if (strategies.length > 0) {
+                // Load the first strategy for editing
+                const strategy = strategies[0];
+                loadStrategyForEditing(strategy);
+            } else {
+                // Show empty state
+                showEmptyState();
+            }
+        }
+        
+        function loadStrategyForEditing(strategy) {
+            // Populate form fields
+            document.getElementById('strategyName').value = strategy.name || '';
+            document.getElementById('strategyDescription').value = strategy.description || '';
+            document.getElementById('maxPositionSize').value = strategy.maxPositionSize || 0.1;
+            document.getElementById('positionSizeValue').textContent = `${(strategy.maxPositionSize * 100).toFixed(0)}% of portfolio`;
+            
+            // Set risk level
+            document.querySelectorAll('.risk-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.risk === strategy.riskLevel) {
+                    option.classList.add('selected');
+                    document.getElementById('riskLevelInput').value = strategy.riskLevel;
+                }
+            });
+            
+            // Load rules
+            currentRules = strategy.rules || [];
+            renderRules();
+        }
+        
+        function showEmptyState() {
+            const container = document.getElementById('rulesContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚙️</div>
+                    <div class="empty-state-text">No rules defined</div>
+                    <div class="empty-state-subtext">Add trading rules to create your strategy</div>
+                </div>
+            `;
+        }
+        
+        function setupEventListeners() {
+            // Risk level selection
+            document.querySelectorAll('.risk-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.risk-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('riskLevelInput').value = this.dataset.risk;
+                });
+            });
+            
+            // Position size slider
+            document.getElementById('maxPositionSize').addEventListener('input', function() {
+                const value = (this.value * 100).toFixed(0);
+                document.getElementById('positionSizeValue').textContent = `${value}% of portfolio`;
+            });
+        }
+        
+        function addNewRule() {
+            const rule = {
+                id: `rule_${++ruleCounter}`,
+                name: `Rule ${ruleCounter}`,
+                condition: {
+                    type: 'price_change',
+                    asset: 'BTC',
+                    operator: '<=',
+                    value: -0.05,
+                    timeframe: '1h'
+                },
+                action: {
+                    type: 'buy',
+                    asset: 'BTC',
+                    amount: 0.5,
+                    orderType: 'market',
+                    convertTo: null
+                }
+            };
+            
+            currentRules.push(rule);
+            renderRules();
+        }
+        
+        function renderRules() {
+            const container = document.getElementById('rulesContainer');
+            
+            if (currentRules.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            container.innerHTML = currentRules.map((rule, index) => `
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <h3 class="rule-title">${rule.name}</h3>
+                        <div class="rule-actions">
+                            <button type="button" class="rule-btn" onclick="editRule(${index})">Edit</button>
+                            <button type="button" class="rule-btn delete" onclick="deleteRule(${index})">Delete</button>
+                        </div>
+                    </div>
+                    <div class="rule-content">
+                        <div class="condition-section">
+                            <div class="section-label">IF (Condition)</div>
+                            <div class="rule-row">
+                                <select class="form-control" onchange="updateRule(${index}, 'condition', 'type', this.value)">
+                                    <option value="price_change" ${rule.condition.type === 'price_change' ? 'selected' : ''}>Price Change</option>
+                                    <option value="volume_spike" ${rule.condition.type === 'volume_spike' ? 'selected' : ''}>Volume Spike</option>
+                                    <option value="sentiment" ${rule.condition.type === 'sentiment' ? 'selected' : ''}>Sentiment</option>
+                                    <option value="time_based" ${rule.condition.type === 'time_based' ? 'selected' : ''}>Time Based</option>
+                                </select>
+                                <select class="form-control" onchange="updateRule(${index}, 'condition', 'asset', this.value)">
+                                    <option value="BTC" ${rule.condition.asset === 'BTC' ? 'selected' : ''}>BTC</option>
+                                    <option value="ETH" ${rule.condition.asset === 'ETH' ? 'selected' : ''}>ETH</option>
+                                    <option value="SOL" ${rule.condition.asset === 'SOL' ? 'selected' : ''}>SOL</option>
+                                </select>
+                                <select class="form-control" onchange="updateRule(${index}, 'condition', 'operator', this.value)">
+                                    <option value="<=" ${rule.condition.operator === '<=' ? 'selected' : ''}><=</option>
+                                    <option value=">=" ${rule.condition.operator === '>=' ? 'selected' : ''}>>=</option>
+                                    <option value="==" ${rule.condition.operator === '==' ? 'selected' : ''}>==</option>
+                                </select>
+                            </div>
+                            <div class="rule-row-2">
+                                <input type="number" class="form-control" 
+                                       value="${rule.condition.value}" 
+                                       step="0.01" 
+                                       onchange="updateRule(${index}, 'condition', 'value', parseFloat(this.value))">
+                                <select class="form-control" onchange="updateRule(${index}, 'condition', 'timeframe', this.value)">
+                                    <option value="1h" ${rule.condition.timeframe === '1h' ? 'selected' : ''}>1 Hour</option>
+                                    <option value="4h" ${rule.condition.timeframe === '4h' ? 'selected' : ''}>4 Hours</option>
+                                    <option value="1d" ${rule.condition.timeframe === '1d' ? 'selected' : ''}>1 Day</option>
+                                </select>
+                            </div>
+                            <div class="rule-description">
+                                ${generateConditionDescription(rule.condition)}
+                            </div>
+                        </div>
+                        <div class="action-section">
+                            <div class="section-label">THEN (Action)</div>
+                            <div class="rule-row">
+                                <select class="form-control" onchange="updateRule(${index}, 'action', 'type', this.value)">
+                                    <option value="buy" ${rule.action.type === 'buy' ? 'selected' : ''}>Buy</option>
+                                    <option value="sell" ${rule.action.type === 'sell' ? 'selected' : ''}>Sell</option>
+                                    <option value="hold" ${rule.action.type === 'hold' ? 'selected' : ''}>Hold</option>
+                                    <option value="convert" ${rule.action.type === 'convert' ? 'selected' : ''}>Convert</option>
+                                </select>
+                                <select class="form-control" onchange="updateRule(${index}, 'action', 'asset', this.value)">
+                                    <option value="BTC" ${rule.action.asset === 'BTC' ? 'selected' : ''}>BTC</option>
+                                    <option value="ETH" ${rule.action.asset === 'ETH' ? 'selected' : ''}>ETH</option>
+                                    <option value="SOL" ${rule.action.asset === 'SOL' ? 'selected' : ''}>SOL</option>
+                                </select>
+                                <input type="number" class="form-control" 
+                                       value="${rule.action.amount}" 
+                                       step="0.1" 
+                                       onchange="updateRule(${index}, 'action', 'amount', parseFloat(this.value))">
+                            </div>
+                            <div class="rule-row-2">
+                                <select class="form-control" onchange="updateRule(${index}, 'action', 'orderType', this.value)">
+                                    <option value="market" ${rule.action.orderType === 'market' ? 'selected' : ''}>Market Order</option>
+                                    <option value="limit" ${rule.action.orderType === 'limit' ? 'selected' : ''}>Limit Order</option>
+                                    <option value="stop" ${rule.action.orderType === 'stop' ? 'selected' : ''}>Stop Order</option>
+                                </select>
+                                <select class="form-control" onchange="updateRule(${index}, 'action', 'convertTo', this.value)">
+                                    <option value="" ${!rule.action.convertTo ? 'selected' : ''}>None</option>
+                                    <option value="USDT" ${rule.action.convertTo === 'USDT' ? 'selected' : ''}>USDT</option>
+                                    <option value="USDC" ${rule.action.convertTo === 'USDC' ? 'selected' : ''}>USDC</option>
+                                </select>
+                            </div>
+                            <div class="rule-description">
+                                ${generateActionDescription(rule.action)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateRule(index, section, field, value) {
+            currentRules[index][section][field] = value;
+            renderRules(); // Re-render to update descriptions
+        }
+        
+        function deleteRule(index) {
+            if (confirm('Are you sure you want to delete this rule?')) {
+                currentRules.splice(index, 1);
+                renderRules();
+            }
+        }
+        
+        function editRule(index) {
+            // For now, just show a message
+            window.cryptoBotApp.showToast('Rule editing not implemented in demo', 'info');
+        }
+        
+        function generateConditionDescription(condition) {
+            const asset = condition.asset;
+            const operator = condition.operator;
+            const value = condition.value;
+            const timeframe = condition.timeframe;
+            
+            if (condition.type === 'price_change') {
+                const percentage = (value * 100).toFixed(1);
+                return `IF ${asset} price ${operator} ${percentage}% in ${timeframe}`;
+            } else if (condition.type === 'volume_spike') {
+                return `IF ${asset} volume ${operator} ${value}x average in ${timeframe}`;
+            } else if (condition.type === 'sentiment') {
+                return `IF ${asset} sentiment ${operator} ${value} in ${timeframe}`;
+            } else if (condition.type === 'time_based') {
+                return `IF time ${operator} ${value} hours`;
+            }
+            
+            return 'Custom condition';
+        }
+        
+        function generateActionDescription(action) {
+            const type = action.type;
+            const asset = action.asset;
+            const amount = action.amount;
+            const orderType = action.orderType;
+            const convertTo = action.convertTo;
+            
+            let description = `THEN ${type} ${amount} ${asset} using ${orderType}`;
+            
+            if (convertTo) {
+                description += ` and convert to ${convertTo}`;
+            }
+            
+            return description;
+        }
+        
+        // Override the form submission to include rules
+        document.getElementById('strategyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            data.rules = JSON.stringify(currentRules);
+            
+            // Create a new form data object with rules
+            const newFormData = new FormData();
+            Object.keys(data).forEach(key => {
+                newFormData.append(key, data[key]);
+            });
+            
+            // Create a temporary form element
+            const tempForm = document.createElement('form');
+            tempForm.style.display = 'none';
+            Object.keys(data).forEach(key => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = data[key];
+                tempForm.appendChild(input);
+            });
+            document.body.appendChild(tempForm);
+            
+            // Submit the form
+            window.cryptoBotApp.handleFormSubmit(tempForm);
+            
+            // Clean up
+            document.body.removeChild(tempForm);
+        });
+    </script>
+</body>
+</html>

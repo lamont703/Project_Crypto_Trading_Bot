@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy Builder Wireframe - Crypto Trading Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .wireframe-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .screen-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .app-bar {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .app-bar h2 {
+            font-size: 18px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .risk-levels {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .risk-option {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+        }
+        
+        .risk-option.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .risk-option h4 {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .risk-option p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .rules-section {
+            margin-top: 30px;
+        }
+        
+        .rule-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .rule-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .rule-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .rule-button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .rule-button.delete {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        .rule-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .condition-section, .action-section {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .section-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .condition-row, .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: end;
+        }
+        
+        .add-rule-button {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .add-rule-button:hover {
+            background: #218838;
+        }
+        
+        .strategy-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .action-button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .save-button {
+            background: #007bff;
+            color: white;
+        }
+        
+        .test-button {
+            background: #28a745;
+            color: white;
+        }
+        
+        .activate-button {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .delete-button {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .tab-item.active {
+            color: #007bff;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .body-padding {
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .tab-bar {
+                display: none;
+            }
+            
+            .body-padding {
+                padding-bottom: 20px;
+            }
+            
+            .risk-levels {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .strategy-actions {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .wireframe-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .wireframe-note h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .wireframe-note p {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Strategy Builder Wireframe</h1>
+            <div class="breadcrumb">
+                <a href="../../index.html">← Back to Hub</a> / Wireframes / Strategy Builder
+            </div>
+        </div>
+        
+        <div class="wireframe-note">
+            <h4>Wireframe Note</h4>
+            <p>This is a low-fidelity wireframe showing the structure and layout of the Strategy Builder screen. Users can create IF/THEN trading rules with configurable conditions and actions.</p>
+        </div>
+        
+        <div class="wireframe-content">
+            <div class="screen-title">Strategy Builder Screen</div>
+            
+            <!-- App Bar -->
+            <div class="app-bar">
+                <h2>⚙️ Strategy Builder</h2>
+            </div>
+            
+            <!-- Strategy Configuration -->
+            <div class="form-section">
+                <div class="section-title">Strategy Configuration</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Strategy Name</label>
+                    <input type="text" class="form-input" placeholder="e.g., BTC Range Trading">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" placeholder="Describe your trading strategy..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Risk Level</label>
+                    <div class="risk-levels">
+                        <div class="risk-option">
+                            <h4>Conservative</h4>
+                            <p>Low risk, steady returns</p>
+                        </div>
+                        <div class="risk-option selected">
+                            <h4>Moderate</h4>
+                            <p>Balanced risk</p>
+                        </div>
+                        <div class="risk-option">
+                            <h4>Aggressive</h4>
+                            <p>High risk, high returns</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Max Position Size</label>
+                    <input type="range" class="form-slider" min="0.01" max="0.5" step="0.01" value="0.1">
+                    <div class="slider-value">10% of portfolio</div>
+                </div>
+            </div>
+            
+            <!-- Trading Rules -->
+            <div class="rules-section">
+                <div class="section-title">Trading Rules</div>
+                
+                <button class="add-rule-button">+ Add New Rule</button>
+                
+                <!-- Rule 1 -->
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Rule 1: BTC Buy Signal</div>
+                        <div class="rule-actions">
+                            <button class="rule-button">Edit</button>
+                            <button class="rule-button delete">Delete</button>
+                        </div>
+                    </div>
+                    <div class="rule-content">
+                        <div class="condition-section">
+                            <div class="section-label">IF (Condition)</div>
+                            <div class="condition-row">
+                                <select class="form-select">
+                                    <option>Price Change</option>
+                                    <option>Volume Spike</option>
+                                    <option>Sentiment</option>
+                                    <option>Time Based</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>BTC</option>
+                                    <option>ETH</option>
+                                    <option>SOL</option>
+                                </select>
+                                <select class="form-select">
+                                    <option><=</option>
+                                    <option>>=</option>
+                                    <option>==</option>
+                                </select>
+                            </div>
+                            <div class="condition-row">
+                                <input type="number" class="form-input" placeholder="-0.05" step="0.01">
+                                <select class="form-select">
+                                    <option>1h</option>
+                                    <option>4h</option>
+                                    <option>1d</option>
+                                </select>
+                                <span style="font-size: 14px; color: #666;">(-5%)</span>
+                            </div>
+                        </div>
+                        <div class="action-section">
+                            <div class="section-label">THEN (Action)</div>
+                            <div class="action-row">
+                                <select class="form-select">
+                                    <option>Buy</option>
+                                    <option>Sell</option>
+                                    <option>Hold</option>
+                                    <option>Convert</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>BTC</option>
+                                    <option>ETH</option>
+                                    <option>SOL</option>
+                                </select>
+                                <input type="number" class="form-input" placeholder="0.5" step="0.1">
+                            </div>
+                            <div class="action-row">
+                                <select class="form-select">
+                                    <option>Market Order</option>
+                                    <option>Limit Order</option>
+                                    <option>Stop Order</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>USDT</option>
+                                    <option>USDC</option>
+                                    <option>None</option>
+                                </select>
+                                <span style="font-size: 14px; color: #666;">(50% of balance)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 2 -->
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <div class="rule-title">Rule 2: BTC Sell Signal</div>
+                        <div class="rule-actions">
+                            <button class="rule-button">Edit</button>
+                            <button class="rule-button delete">Delete</button>
+                        </div>
+                    </div>
+                    <div class="rule-content">
+                        <div class="condition-section">
+                            <div class="section-label">IF (Condition)</div>
+                            <div class="condition-row">
+                                <select class="form-select">
+                                    <option>Price Change</option>
+                                    <option>Volume Spike</option>
+                                    <option>Sentiment</option>
+                                    <option>Time Based</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>BTC</option>
+                                    <option>ETH</option>
+                                    <option>SOL</option>
+                                </select>
+                                <select class="form-select">
+                                    <option><=</option>
+                                    <option>>=</option>
+                                    <option>==</option>
+                                </select>
+                            </div>
+                            <div class="condition-row">
+                                <input type="number" class="form-input" placeholder="0.10" step="0.01">
+                                <select class="form-select">
+                                    <option>1h</option>
+                                    <option>4h</option>
+                                    <option>1d</option>
+                                </select>
+                                <span style="font-size: 14px; color: #666;">(+10%)</span>
+                            </div>
+                        </div>
+                        <div class="action-section">
+                            <div class="section-label">THEN (Action)</div>
+                            <div class="action-row">
+                                <select class="form-select">
+                                    <option>Buy</option>
+                                    <option>Sell</option>
+                                    <option>Hold</option>
+                                    <option>Convert</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>BTC</option>
+                                    <option>ETH</option>
+                                    <option>SOL</option>
+                                </select>
+                                <input type="number" class="form-input" placeholder="0.5" step="0.1">
+                            </div>
+                            <div class="action-row">
+                                <select class="form-select">
+                                    <option>Market Order</option>
+                                    <option>Limit Order</option>
+                                    <option>Stop Order</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>USDT</option>
+                                    <option>USDC</option>
+                                    <option>None</option>
+                                </select>
+                                <span style="font-size: 14px; color: #666;">(50% of position)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Strategy Actions -->
+            <div class="strategy-actions">
+                <button class="action-button save-button">Save Strategy</button>
+                <button class="action-button test-button">Test Strategy</button>
+                <button class="action-button activate-button">Activate Strategy</button>
+                <button class="action-button delete-button">Delete Strategy</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item active">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add basic interactivity for wireframe demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab bar navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Risk level selection
+            const riskOptions = document.querySelectorAll('.risk-option');
+            riskOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    riskOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Slider value update
+            const slider = document.querySelector('.form-slider');
+            const sliderValue = document.querySelector('.slider-value');
+            slider.addEventListener('input', function() {
+                const value = (this.value * 100).toFixed(0);
+                sliderValue.textContent = value + '% of portfolio';
+            });
+            
+            // Add rule button
+            const addRuleButton = document.querySelector('.add-rule-button');
+            addRuleButton.addEventListener('click', function() {
+                alert('This would add a new trading rule');
+            });
+            
+            // Strategy action buttons
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('This would: ' + this.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtesting - Crypto Trading Bot</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .backtest-config {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .config-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+        }
+        
+        .run-backtest-btn {
+            width: 100%;
+            padding: var(--spacing-lg);
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .run-backtest-btn:hover {
+            background-color: var(--success-hover);
+        }
+        
+        .run-backtest-btn:disabled {
+            background-color: var(--gray-400);
+            cursor: not-allowed;
+        }
+        
+        .results-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .results-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .export-btn {
+            background-color: var(--info-color);
+            color: var(--text-inverse);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .export-btn:hover {
+            background-color: var(--info-hover);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .metric-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+        }
+        
+        .metric-value.positive {
+            color: var(--success-color);
+        }
+        
+        .metric-value.negative {
+            color: var(--danger-color);
+        }
+        
+        .chart-section {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .chart-container {
+            height: 400px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .info-card {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .info-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .trades-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+        
+        .trades-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .trades-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .trades-table {
+            margin: 0;
+        }
+        
+        .trades-table th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .trades-table td {
+            font-size: var(--font-size-sm);
+        }
+        
+        .pnl-positive {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .pnl-negative {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .loading-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+            animation: spin 2s linear infinite;
+        }
+        
+        .loading-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .loading-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-state-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .config-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .chart-info {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <h1>📊 Backtesting</h1>
+        </div>
+        
+        <!-- Backtest Configuration -->
+        <div class="backtest-config">
+            <h2 class="section-title">Backtest Configuration</h2>
+            <div class="config-grid">
+                <div class="config-section">
+                    <h3 class="section-title">Strategy Selection</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="strategySelect">Strategy</label>
+                        <select class="form-control" id="strategySelect">
+                            <option value="">Select a strategy...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="assetSelect">Asset</label>
+                        <select class="form-control" id="assetSelect">
+                            <option value="BTC">BTC</option>
+                            <option value="ETH">ETH</option>
+                            <option value="SOL">SOL</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3 class="section-title">Test Parameters</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="initialCapital">Initial Capital</label>
+                        <input type="number" class="form-control" id="initialCapital" 
+                               value="10000" min="1000" max="100000" step="1000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="timeframeSelect">Timeframe</label>
+                        <select class="form-control" id="timeframeSelect">
+                            <option value="1h">1 Hour</option>
+                            <option value="4h">4 Hours</option>
+                            <option value="1d">1 Day</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date Range</label>
+                        <div class="date-range">
+                            <input type="date" class="form-control" id="startDate" value="2024-01-01">
+                            <input type="date" class="form-control" id="endDate" value="2024-01-20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="run-backtest-btn" id="runBacktestBtn" onclick="runBacktest()">
+            🚀 Run Backtest
+        </button>
+        
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="results-header">
+                <h2 class="results-title">Backtest Results</h2>
+                <button class="export-btn" onclick="exportResults()">Export Results</button>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="metrics-grid" id="metricsGrid">
+                <!-- Metrics will be populated by JavaScript -->
+            </div>
+            
+            <!-- Performance Chart -->
+            <div class="chart-section">
+                <h3 class="section-title">Performance Chart</h3>
+                <div class="chart-container" id="chartContainer">
+                    <!-- Chart will be rendered here -->
+                </div>
+                <div class="chart-info" id="chartInfo">
+                    <!-- Chart info will be populated here -->
+                </div>
+            </div>
+            
+            <!-- Trade History -->
+            <div class="trades-section">
+                <div class="trades-header">
+                    <h3 class="trades-title">Trade History</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="trades-table" id="tradesTable">
+                        <thead>
+                            <tr>
+                                <th>Entry Time</th>
+                                <th>Exit Time</th>
+                                <th>Asset</th>
+                                <th>Side</th>
+                                <th>Entry Price</th>
+                                <th>Exit Price</th>
+                                <th>P&L</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tradesTableBody">
+                            <!-- Trades will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState" style="display: none;">
+            <div class="loading-icon">⏳</div>
+            <div class="loading-text">Running backtest...</div>
+            <div class="loading-subtext">This may take a few moments</div>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">📊</div>
+            <div class="empty-state-text">No backtest results</div>
+            <div class="empty-state-subtext">Configure and run a backtest to see results</div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item" data-screen="dashboard">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item" data-screen="market">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item active" data-screen="strategy">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item" data-screen="trade">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item" data-screen="settings">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Backtesting specific functionality
+        let currentResults = null;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            const app = window.cryptoBotApp;
+            
+            // Load strategies
+            loadStrategies(app);
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        function loadStrategies(app) {
+            const strategies = app.getStrategies();
+            const select = document.getElementById('strategySelect');
+            
+            select.innerHTML = '<option value="">Select a strategy...</option>';
+            
+            strategies.forEach(strategy => {
+                const option = document.createElement('option');
+                option.value = strategy.id;
+                option.textContent = strategy.name;
+                select.appendChild(option);
+            });
+            
+            // If no strategies, show message
+            if (strategies.length === 0) {
+                select.innerHTML = '<option value="">No strategies available</option>';
+            }
+        }
+        
+        function setupEventListeners() {
+            // Strategy selection
+            document.getElementById('strategySelect').addEventListener('change', function() {
+                const strategyId = this.value;
+                if (strategyId) {
+                    // Enable run button
+                    document.getElementById('runBacktestBtn').disabled = false;
+                } else {
+                    // Disable run button
+                    document.getElementById('runBacktestBtn').disabled = true;
+                }
+            });
+        }
+        
+        function runBacktest() {
+            const strategyId = document.getElementById('strategySelect').value;
+            const asset = document.getElementById('assetSelect').value;
+            const initialCapital = parseFloat(document.getElementById('initialCapital').value);
+            const timeframe = document.getElementById('timeframeSelect').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!strategyId) {
+                window.cryptoBotApp.showToast('Please select a strategy', 'warning');
+                return;
+            }
+            
+            // Show loading state
+            showLoadingState();
+            
+            // Simulate backtest execution
+            setTimeout(() => {
+                const results = generateMockResults(strategyId, asset, initialCapital, startDate, endDate);
+                displayResults(results);
+            }, 2000);
+        }
+        
+        function showLoadingState() {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+        }
+        
+        function generateMockResults(strategyId, asset, initialCapital, startDate, endDate) {
+            // Generate mock backtest results
+            const totalReturn = (Math.random() - 0.3) * 0.4; // -30% to +10%
+            const finalCapital = initialCapital * (1 + totalReturn);
+            const maxDrawdown = Math.random() * 0.15; // 0% to 15%
+            const winRate = 0.5 + Math.random() * 0.4; // 50% to 90%
+            const totalTrades = Math.floor(Math.random() * 50) + 10; // 10 to 60 trades
+            const winningTrades = Math.floor(totalTrades * winRate);
+            const losingTrades = totalTrades - winningTrades;
+            
+            const avgWin = Math.random() * 500 + 100;
+            const avgLoss = Math.random() * 300 + 50;
+            const profitFactor = (avgWin * winningTrades) / (avgLoss * losingTrades);
+            const sharpeRatio = 0.5 + Math.random() * 2; // 0.5 to 2.5
+            
+            // Generate mock trades
+            const trades = [];
+            const startTime = new Date(startDate);
+            const endTime = new Date(endDate);
+            const timeDiff = endTime - startTime;
+            
+            for (let i = 0; i < totalTrades; i++) {
+                const entryTime = new Date(startTime.getTime() + Math.random() * timeDiff);
+                const duration = Math.random() * 48 + 1; // 1 to 49 hours
+                const exitTime = new Date(entryTime.getTime() + duration * 60 * 60 * 1000);
+                
+                const entryPrice = 40000 + Math.random() * 10000; // $40k to $50k
+                const priceChange = (Math.random() - 0.5) * 0.2; // -10% to +10%
+                const exitPrice = entryPrice * (1 + priceChange);
+                
+                const pnl = (exitPrice - entryPrice) * 0.1; // Assuming 0.1 BTC position
+                
+                trades.push({
+                    entryTime: entryTime.toISOString(),
+                    exitTime: exitTime.toISOString(),
+                    asset: asset,
+                    side: 'long',
+                    entryPrice: entryPrice,
+                    exitPrice: exitPrice,
+                    pnl: pnl,
+                    duration: duration
+                });
+            }
+            
+            return {
+                strategyId: strategyId,
+                asset: asset,
+                initialCapital: initialCapital,
+                finalCapital: finalCapital,
+                totalReturn: totalReturn,
+                totalReturnPercent: totalReturn * 100,
+                maxDrawdown: -maxDrawdown,
+                maxDrawdownPercent: -maxDrawdown * 100,
+                winRate: winRate,
+                profitFactor: profitFactor,
+                sharpeRatio: sharpeRatio,
+                totalTrades: totalTrades,
+                winningTrades: winningTrades,
+                losingTrades: losingTrades,
+                avgWin: avgWin,
+                avgLoss: avgLoss,
+                avgTimeInTrade: Math.random() * 10 + 2, // 2 to 12 hours
+                trades: trades,
+                createdAt: new Date().toISOString()
+            };
+        }
+        
+        function displayResults(results) {
+            currentResults = results;
+            
+            // Hide loading state
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Display metrics
+            displayMetrics(results);
+            
+            // Display chart
+            displayChart(results);
+            
+            // Display trades
+            displayTrades(results);
+            
+            // Show success message
+            window.cryptoBotApp.showToast('Backtest completed successfully', 'success');
+        }
+        
+        function displayMetrics(results) {
+            const container = document.getElementById('metricsGrid');
+            
+            container.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-label">Total Return</div>
+                    <div class="metric-value ${results.totalReturn >= 0 ? 'positive' : 'negative'}">
+                        ${results.totalReturn >= 0 ? '+' : ''}${results.totalReturnPercent.toFixed(1)}%
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Max Drawdown</div>
+                    <div class="metric-value negative">
+                        ${results.maxDrawdownPercent.toFixed(1)}%
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Win Rate</div>
+                    <div class="metric-value">
+                        ${(results.winRate * 100).toFixed(1)}%
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Profit Factor</div>
+                    <div class="metric-value">
+                        ${results.profitFactor.toFixed(2)}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Sharpe Ratio</div>
+                    <div class="metric-value">
+                        ${results.sharpeRatio.toFixed(2)}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Total Trades</div>
+                    <div class="metric-value">
+                        ${results.totalTrades}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Avg Win</div>
+                    <div class="metric-value positive">
+                        $${results.avgWin.toFixed(0)}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Avg Loss</div>
+                    <div class="metric-value negative">
+                        -$${results.avgLoss.toFixed(0)}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function displayChart(results) {
+            const container = document.getElementById('chartContainer');
+            
+            // Generate mock portfolio value data
+            const dataPoints = [];
+            const startValue = results.initialCapital;
+            const endValue = results.finalCapital;
+            const numPoints = 50;
+            
+            for (let i = 0; i < numPoints; i++) {
+                const progress = i / (numPoints - 1);
+                const baseValue = startValue + (endValue - startValue) * progress;
+                const noise = (Math.random() - 0.5) * (endValue - startValue) * 0.1;
+                dataPoints.push({
+                    value: baseValue + noise,
+                    timestamp: new Date(Date.now() - (numPoints - i) * 24 * 60 * 60 * 1000).toISOString()
+                });
+            }
+            
+            // Render chart
+            window.cryptoBotApp.createCanvasChart(container, dataPoints, {
+                type: 'line',
+                color: results.totalReturn >= 0 ? '#28a745' : '#dc3545'
+            });
+            
+            // Update chart info
+            const chartInfo = document.getElementById('chartInfo');
+            chartInfo.innerHTML = `
+                <div class="info-card">
+                    <div class="info-label">Start Value</div>
+                    <div class="info-value">$${results.initialCapital.toFixed(0)}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">End Value</div>
+                    <div class="info-value">$${results.finalCapital.toFixed(0)}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Peak Value</div>
+                    <div class="info-value">$${(results.finalCapital * 1.05).toFixed(0)}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Lowest Value</div>
+                    <div class="info-value">$${(results.finalCapital * 0.95).toFixed(0)}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Avg Time in Trade</div>
+                    <div class="info-value">${results.avgTimeInTrade.toFixed(1)}h</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Best Trade</div>
+                    <div class="info-value">$${Math.max(...results.trades.map(t => t.pnl)).toFixed(0)}</div>
+                </div>
+            `;
+        }
+        
+        function displayTrades(results) {
+            const tbody = document.getElementById('tradesTableBody');
+            
+            tbody.innerHTML = results.trades.map(trade => `
+                <tr>
+                    <td>${window.cryptoBotApp.formatDate(trade.entryTime, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                    <td>${window.cryptoBotApp.formatDate(trade.exitTime, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                    <td>${trade.asset}</td>
+                    <td>${trade.side}</td>
+                    <td>$${trade.entryPrice.toFixed(0)}</td>
+                    <td>$${trade.exitPrice.toFixed(0)}</td>
+                    <td class="${trade.pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                        ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(0)}
+                    </td>
+                    <td>${trade.duration.toFixed(1)}h</td>
+                </tr>
+            `).join('');
+        }
+        
+        function exportResults() {
+            if (!currentResults) {
+                window.cryptoBotApp.showToast('No results to export', 'warning');
+                return;
+            }
+            
+            // Create CSV content
+            const csvContent = [
+                ['Metric', 'Value'],
+                ['Total Return', `${currentResults.totalReturnPercent.toFixed(2)}%`],
+                ['Max Drawdown', `${currentResults.maxDrawdownPercent.toFixed(2)}%`],
+                ['Win Rate', `${(currentResults.winRate * 100).toFixed(2)}%`],
+                ['Profit Factor', currentResults.profitFactor.toFixed(2)],
+                ['Sharpe Ratio', currentResults.sharpeRatio.toFixed(2)],
+                ['Total Trades', currentResults.totalTrades],
+                ['Avg Win', `$${currentResults.avgWin.toFixed(0)}`],
+                ['Avg Loss', `$${currentResults.avgLoss.toFixed(0)}`],
+                ['Avg Time in Trade', `${currentResults.avgTimeInTrade.toFixed(1)}h`]
+            ].map(row => row.join(',')).join('\n');
+            
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backtest_results_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            window.cryptoBotApp.showToast('Results exported successfully', 'success');
+        }
+    </script>
+</body>
+</html>

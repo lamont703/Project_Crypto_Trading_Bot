@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Wireframe - Crypto Trading Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .wireframe-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .screen-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .app-bar {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .app-bar h2 {
+            font-size: 18px;
+        }
+        
+        .settings-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .settings-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .toggle-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .toggle-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+        }
+        
+        .toggle-option.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .toggle-option h4 {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .toggle-option p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .switch-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .switch-label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .switch-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .switch-toggle {
+            width: 50px;
+            height: 25px;
+            background: #ddd;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .switch-toggle.active {
+            background: #007bff;
+        }
+        
+        .switch-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .switch-toggle.active::after {
+            transform: translateX(25px);
+        }
+        
+        .api-key-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .api-key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .api-key-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .api-key-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .api-key-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .api-key-status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .api-key-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .api-key-button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .api-key-button.edit {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .api-key-button.delete {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        .add-api-key-button {
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .add-api-key-button:hover {
+            background: #218838;
+        }
+        
+        .settings-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .action-button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .save-button {
+            background: #007bff;
+            color: white;
+        }
+        
+        .reset-button {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .export-button {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .delete-button {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .tab-item.active {
+            color: #007bff;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .body-padding {
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .tab-bar {
+                display: none;
+            }
+            
+            .body-padding {
+                padding-bottom: 20px;
+            }
+            
+            .settings-sections {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .settings-actions {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .wireframe-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .wireframe-note h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .wireframe-note p {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Settings Wireframe</h1>
+            <div class="breadcrumb">
+                <a href="../../index.html">← Back to Hub</a> / Wireframes / Settings
+            </div>
+        </div>
+        
+        <div class="wireframe-note">
+            <h4>Wireframe Note</h4>
+            <p>This is a low-fidelity wireframe showing the structure and layout of the Settings screen. Users can configure their profile, risk settings, API keys, and notifications.</p>
+        </div>
+        
+        <div class="wireframe-content">
+            <div class="screen-title">Settings Screen</div>
+            
+            <!-- App Bar -->
+            <div class="app-bar">
+                <h2>⚙️ Settings</h2>
+            </div>
+            
+            <!-- Settings Sections -->
+            <div class="settings-sections">
+                <!-- Account Settings -->
+                <div class="settings-section">
+                    <div class="section-title">Account Settings</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Profile Name</label>
+                        <input type="text" class="form-input" placeholder="Alex Johnson" value="Alex Johnson">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="alex@example.com" value="alex@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Risk Profile</label>
+                        <div class="toggle-group">
+                            <div class="toggle-option">
+                                <h4>Conservative</h4>
+                                <p>Low risk</p>
+                            </div>
+                            <div class="toggle-option selected">
+                                <h4>Moderate</h4>
+                                <p>Balanced</p>
+                            </div>
+                            <div class="toggle-option">
+                                <h4>Aggressive</h4>
+                                <p>High risk</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Exchange</label>
+                        <select class="form-select">
+                            <option>Binance</option>
+                            <option>Coinbase</option>
+                            <option>Kraken</option>
+                            <option>KuCoin</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Currency</label>
+                        <select class="form-select">
+                            <option>USD</option>
+                            <option>EUR</option>
+                            <option>GBP</option>
+                            <option>JPY</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Trading Settings -->
+                <div class="settings-section">
+                    <div class="section-title">Trading Settings</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Position Size</label>
+                        <input type="range" class="form-slider" min="0.01" max="0.5" step="0.01" value="0.1">
+                        <div class="slider-value">10% of portfolio</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Max Position Size</label>
+                        <input type="range" class="form-slider" min="0.05" max="1.0" step="0.05" value="0.25">
+                        <div class="slider-value">25% of portfolio</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Stop Loss</label>
+                        <input type="range" class="form-slider" min="0.01" max="0.2" step="0.01" value="0.05">
+                        <div class="slider-value">5% stop loss</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Take Profit</label>
+                        <input type="range" class="form-slider" min="0.02" max="0.5" step="0.01" value="0.10">
+                        <div class="slider-value">10% take profit</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Time in Trade</label>
+                        <select class="form-select">
+                            <option>1 Hour</option>
+                            <option>4 Hours</option>
+                            <option selected>24 Hours</option>
+                            <option>1 Week</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Notifications -->
+                <div class="settings-section">
+                    <div class="section-title">Notifications</div>
+                    
+                    <div class="switch-group">
+                        <div>
+                            <div class="switch-label">Price Alerts</div>
+                            <div class="switch-description">Get notified when prices hit targets</div>
+                        </div>
+                        <div class="switch-toggle active"></div>
+                    </div>
+                    
+                    <div class="switch-group">
+                        <div>
+                            <div class="switch-label">Order Updates</div>
+                            <div class="switch-description">Notifications for order status changes</div>
+                        </div>
+                        <div class="switch-toggle active"></div>
+                    </div>
+                    
+                    <div class="switch-group">
+                        <div>
+                            <div class="switch-label">News Alerts</div>
+                            <div class="switch-description">Important market news and updates</div>
+                        </div>
+                        <div class="switch-toggle"></div>
+                    </div>
+                    
+                    <div class="switch-group">
+                        <div>
+                            <div class="switch-label">Strategy Alerts</div>
+                            <div class="switch-description">Strategy execution and performance updates</div>
+                        </div>
+                        <div class="switch-toggle active"></div>
+                    </div>
+                    
+                    <div class="switch-group">
+                        <div>
+                            <div class="switch-label">Risk Warnings</div>
+                            <div class="switch-description">High risk or unusual market conditions</div>
+                        </div>
+                        <div class="switch-toggle active"></div>
+                    </div>
+                </div>
+                
+                <!-- API Keys -->
+                <div class="settings-section">
+                    <div class="section-title">Exchange API Keys</div>
+                    
+                    <button class="add-api-key-button">+ Add New API Key</button>
+                    
+                    <div class="api-key-item">
+                        <div class="api-key-header">
+                            <div class="api-key-name">Binance Main Account</div>
+                            <div class="api-key-status active">Active</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                            API Key: ********************1234
+                        </div>
+                        <div class="api-key-actions">
+                            <button class="api-key-button edit">Edit</button>
+                            <button class="api-key-button">Test</button>
+                            <button class="api-key-button delete">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="api-key-item">
+                        <div class="api-key-header">
+                            <div class="api-key-name">Coinbase Pro</div>
+                            <div class="api-key-status inactive">Inactive</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                            API Key: ********************5678
+                        </div>
+                        <div class="api-key-actions">
+                            <button class="api-key-button edit">Edit</button>
+                            <button class="api-key-button">Test</button>
+                            <button class="api-key-button delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Actions -->
+            <div class="settings-actions">
+                <button class="action-button save-button">Save Settings</button>
+                <button class="action-button reset-button">Reset to Defaults</button>
+                <button class="action-button export-button">Export Data</button>
+                <button class="action-button delete-button">Delete Account</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item active">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add basic interactivity for wireframe demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab bar navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Risk profile toggle
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const group = this.parentElement;
+                    group.querySelectorAll('.toggle-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Switch toggles
+            const switchToggles = document.querySelectorAll('.switch-toggle');
+            switchToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // Slider value updates
+            const sliders = document.querySelectorAll('.form-slider');
+            sliders.forEach(slider => {
+                const valueDisplay = slider.nextElementSibling;
+                slider.addEventListener('input', function() {
+                    const value = (this.value * 100).toFixed(0);
+                    valueDisplay.textContent = value + '% of portfolio';
+                });
+            });
+            
+            // Action buttons
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('This would: ' + this.textContent);
+                });
+            });
+            
+            // API key buttons
+            const apiKeyButtons = document.querySelectorAll('.api-key-button');
+            apiKeyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('This would: ' + this.textContent);
+                });
+            });
+            
+            // Add API key button
+            const addApiKeyButton = document.querySelector('.add-api-key-button');
+            addApiKeyButton.addEventListener('click', function() {
+                alert('This would open a form to add a new API key');
+            });
+        });
+    </script>
+</body>
+</html>

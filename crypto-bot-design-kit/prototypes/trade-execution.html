@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Execution - Crypto Trading Bot</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .trade-form {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .form-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .toggle-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .toggle-option {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            background-color: var(--bg-primary);
+            transition: all var(--transition-fast);
+        }
+        
+        .toggle-option:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-secondary);
+        }
+        
+        .toggle-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        .toggle-option h4 {
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-size-base);
+        }
+        
+        .toggle-option p {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+        
+        .order-preview {
+            background-color: var(--bg-primary);
+            border: 2px solid var(--primary-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .preview-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+        }
+        
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color-light);
+        }
+        
+        .preview-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .preview-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .preview-value.positive {
+            color: var(--success-color);
+        }
+        
+        .preview-value.negative {
+            color: var(--danger-color);
+        }
+        
+        .order-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .action-btn {
+            padding: var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-height: 56px;
+        }
+        
+        .action-btn.preview {
+            background-color: var(--info-color);
+            color: var(--text-inverse);
+        }
+        
+        .action-btn.preview:hover {
+            background-color: var(--info-hover);
+        }
+        
+        .action-btn.execute {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+        }
+        
+        .action-btn.execute:hover {
+            background-color: var(--success-hover);
+        }
+        
+        .action-btn.cancel {
+            background-color: var(--secondary-color);
+            color: var(--text-inverse);
+        }
+        
+        .action-btn.cancel:hover {
+            background-color: var(--gray-600);
+        }
+        
+        .activity-feed {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+        
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .feed-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .feed-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .feed-item:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+        
+        .feed-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .feed-action {
+            font-weight: 600;
+            font-size: var(--font-size-base);
+        }
+        
+        .feed-time {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .feed-details {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-state-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .order-actions {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <h1>💹 Trade Execution</h1>
+        </div>
+        
+        <!-- Trade Form -->
+        <form class="trade-form" data-form-type="order" id="tradeForm">
+            <div class="form-grid">
+                <!-- Order Details -->
+                <div class="form-section">
+                    <h3 class="section-title">Order Details</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="assetSelect">Asset</label>
+                            <select class="form-control" id="assetSelect" name="asset" required>
+                                <option value="BTC">BTC</option>
+                                <option value="ETH">ETH</option>
+                                <option value="SOL">SOL</option>
+                                <option value="ADA">ADA</option>
+                                <option value="DOT">DOT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Order Side</label>
+                            <div class="toggle-group">
+                                <div class="toggle-option selected" data-side="buy">
+                                    <h4>Buy</h4>
+                                    <p>Long Position</p>
+                                </div>
+                                <div class="toggle-option" data-side="sell">
+                                    <h4>Sell</h4>
+                                    <p>Short Position</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name="side" value="buy" id="sideInput">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="orderType">Order Type</label>
+                            <select class="form-control" id="orderType" name="type" required>
+                                <option value="market">Market Order</option>
+                                <option value="limit">Limit Order</option>
+                                <option value="stop">Stop Order</option>
+                                <option value="stop_limit">Stop Limit Order</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="orderSize">Size</label>
+                            <input type="number" class="form-control" id="orderSize" name="size" 
+                                   placeholder="0.5" step="0.01" min="0.01" required>
+                            <div class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-xs);">
+                                Asset amount
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="orderPrice">Price (Limit Orders)</label>
+                        <input type="number" class="form-control" id="orderPrice" name="price" 
+                               placeholder="45000" step="0.01" min="0.01">
+                        <div class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-xs);">
+                            USD per asset
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Risk Management -->
+                <div class="form-section">
+                    <h3 class="section-title">Risk Management</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="stopLoss">Stop Loss</label>
+                        <input type="number" class="form-control" id="stopLoss" name="stopLoss" 
+                               placeholder="42750" step="0.01" min="0.01">
+                        <div class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-xs);">
+                            -5% from entry
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="takeProfit">Take Profit</label>
+                        <input type="number" class="form-control" id="takeProfit" name="takeProfit" 
+                               placeholder="49500" step="0.01" min="0.01">
+                        <div class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-xs);">
+                            +10% from entry
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="timeInTrade">Time in Trade</label>
+                        <select class="form-control" id="timeInTrade" name="timeInTrade">
+                            <option value="1">1 Hour</option>
+                            <option value="4">4 Hours</option>
+                            <option value="24" selected>24 Hours</option>
+                            <option value="168">1 Week</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Convert to Stablecoin</label>
+                        <div class="toggle-group">
+                            <div class="toggle-option" data-convert="USDT">
+                                <h4>USDT</h4>
+                                <p>Tether</p>
+                            </div>
+                            <div class="toggle-option" data-convert="USDC">
+                                <h4>USDC</h4>
+                                <p>USD Coin</p>
+                            </div>
+                            <div class="toggle-option selected" data-convert="none">
+                                <h4>None</h4>
+                                <p>Keep Asset</p>
+                            </div>
+                        </div>
+                        <input type="hidden" name="convertTo" value="none" id="convertToInput">
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Order Preview -->
+        <div class="order-preview" id="orderPreview">
+            <h3 class="preview-title">Order Preview</h3>
+            <div id="previewContent">
+                <!-- Preview content will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Order Actions -->
+        <div class="order-actions">
+            <button type="button" class="action-btn preview" onclick="updatePreview()">
+                📋 Preview Order
+            </button>
+            <button type="button" class="action-btn execute" onclick="executeOrder()">
+                ✅ Execute Order (Mock)
+            </button>
+            <button type="button" class="action-btn cancel" onclick="cancelOrder()">
+                ❌ Cancel
+            </button>
+        </div>
+        
+        <!-- Activity Feed -->
+        <div class="activity-feed">
+            <div class="feed-header">
+                <h3 class="feed-title">Recent Activity</h3>
+            </div>
+            <div id="activityFeed">
+                <!-- Activity items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item" data-screen="dashboard">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item" data-screen="market">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item" data-screen="strategy">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item active" data-screen="trade">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item" data-screen="settings">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Trade Execution specific functionality
+        let currentPreview = null;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            const app = window.cryptoBotApp;
+            
+            // Load activity feed
+            loadActivityFeed(app);
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initial preview update
+            updatePreview();
+        });
+        
+        function setupEventListeners() {
+            // Order side toggle
+            document.querySelectorAll('.toggle-option[data-side]').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.toggle-option[data-side]').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('sideInput').value = this.dataset.side;
+                    updatePreview();
+                });
+            });
+            
+            // Convert to stablecoin toggle
+            document.querySelectorAll('.toggle-option[data-convert]').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.toggle-option[data-convert]').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('convertToInput').value = this.dataset.convert;
+                    updatePreview();
+                });
+            });
+            
+            // Form inputs
+            document.querySelectorAll('#tradeForm input, #tradeForm select').forEach(input => {
+                input.addEventListener('change', updatePreview);
+                input.addEventListener('input', updatePreview);
+            });
+        }
+        
+        function loadActivityFeed(app) {
+            const container = document.getElementById('activityFeed');
+            
+            // Get recent orders from sample data
+            const orders = app.sampleData?.orders || [];
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💹</div>
+                        <div class="empty-state-text">No recent activity</div>
+                        <div class="empty-state-subtext">Your trading activity will appear here</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = orders.map(order => `
+                <div class="feed-item">
+                    <div class="feed-header-item">
+                        <div class="feed-action">Order ${order.status === 'filled' ? 'Executed' : 'Placed'}</div>
+                        <div class="feed-time">${app.formatRelativeTime(order.createdAt)}</div>
+                    </div>
+                    <div class="feed-details">
+                        ${order.side === 'buy' ? 'Bought' : 'Sold'} ${order.filledSize} ${order.asset} at ${app.formatCurrency(order.filledPrice)} - Order ID: #${order.id.split('_')[1]}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updatePreview() {
+            const form = document.getElementById('tradeForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // Get current market price (mock)
+            const marketPrices = {
+                'BTC': 45100,
+                'ETH': 3012.50,
+                'SOL': 93.30,
+                'ADA': 0.485,
+                'DOT': 6.85
+            };
+            
+            const asset = data.asset;
+            const side = data.side;
+            const type = data.type;
+            const size = parseFloat(data.size) || 0;
+            const price = parseFloat(data.price) || marketPrices[asset];
+            const stopLoss = parseFloat(data.stopLoss) || 0;
+            const takeProfit = parseFloat(data.takeProfit) || 0;
+            const timeInTrade = parseInt(data.timeInTrade) || 24;
+            const convertTo = data.convertTo === 'none' ? null : data.convertTo;
+            
+            const totalValue = size * price;
+            const riskAmount = stopLoss > 0 ? Math.abs(price - stopLoss) * size : 0;
+            
+            currentPreview = {
+                asset,
+                side,
+                type,
+                size,
+                price,
+                totalValue,
+                stopLoss,
+                takeProfit,
+                timeInTrade,
+                convertTo,
+                riskAmount
+            };
+            
+            renderPreview();
+        }
+        
+        function renderPreview() {
+            if (!currentPreview) return;
+            
+            const container = document.getElementById('previewContent');
+            const app = window.cryptoBotApp;
+            
+            container.innerHTML = `
+                <div class="preview-row">
+                    <div class="preview-label">Asset:</div>
+                    <div class="preview-value">${currentPreview.asset}</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Side:</div>
+                    <div class="preview-value">${currentPreview.side}</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Type:</div>
+                    <div class="preview-value">${currentPreview.type}</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Size:</div>
+                    <div class="preview-value">${currentPreview.size} ${currentPreview.asset}</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Price:</div>
+                    <div class="preview-value">${app.formatCurrency(currentPreview.price)}</div>
+                </div>
+                <div class="preview-row">
+                    <div class="preview-label">Total Value:</div>
+                    <div class="preview-value">${app.formatCurrency(currentPreview.totalValue)}</div>
+                </div>
+                ${currentPreview.stopLoss > 0 ? `
+                <div class="preview-row">
+                    <div class="preview-label">Stop Loss:</div>
+                    <div class="preview-value">${app.formatCurrency(currentPreview.stopLoss)}</div>
+                </div>
+                ` : ''}
+                ${currentPreview.takeProfit > 0 ? `
+                <div class="preview-row">
+                    <div class="preview-label">Take Profit:</div>
+                    <div class="preview-value">${app.formatCurrency(currentPreview.takeProfit)}</div>
+                </div>
+                ` : ''}
+                <div class="preview-row">
+                    <div class="preview-label">Time Limit:</div>
+                    <div class="preview-value">${currentPreview.timeInTrade} Hours</div>
+                </div>
+                ${currentPreview.convertTo ? `
+                <div class="preview-row">
+                    <div class="preview-label">Convert to:</div>
+                    <div class="preview-value">${currentPreview.convertTo}</div>
+                </div>
+                ` : ''}
+                ${currentPreview.riskAmount > 0 ? `
+                <div class="preview-row">
+                    <div class="preview-label">Risk Amount:</div>
+                    <div class="preview-value negative">${app.formatCurrency(currentPreview.riskAmount)}</div>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        function executeOrder() {
+            if (!currentPreview) {
+                window.cryptoBotApp.showToast('Please configure your order first', 'warning');
+                return;
+            }
+            
+            // Validate required fields
+            if (!currentPreview.size || currentPreview.size <= 0) {
+                window.cryptoBotApp.showToast('Please enter a valid order size', 'warning');
+                return;
+            }
+            
+            // Show confirmation
+            const confirmMessage = `Execute ${currentPreview.side} order for ${currentPreview.size} ${currentPreview.asset} at ${window.cryptoBotApp.formatCurrency(currentPreview.price)}?`;
+            
+            if (confirm(confirmMessage)) {
+                // Submit the form
+                const form = document.getElementById('tradeForm');
+                window.cryptoBotApp.handleFormSubmit(form);
+                
+                // Add to activity feed
+                addToActivityFeed(`Order executed: ${currentPreview.side} ${currentPreview.size} ${currentPreview.asset} at ${window.cryptoBotApp.formatCurrency(currentPreview.price)}`);
+                
+                // Reset form
+                resetForm();
+            }
+        }
+        
+        function cancelOrder() {
+            if (confirm('Are you sure you want to cancel this order?')) {
+                resetForm();
+                window.cryptoBotApp.showToast('Order cancelled', 'info');
+            }
+        }
+        
+        function resetForm() {
+            document.getElementById('tradeForm').reset();
+            document.querySelector('.toggle-option[data-side="buy"]').classList.add('selected');
+            document.querySelector('.toggle-option[data-side="sell"]').classList.remove('selected');
+            document.querySelector('.toggle-option[data-convert="none"]').classList.add('selected');
+            document.querySelectorAll('.toggle-option[data-convert]:not([data-convert="none"])').forEach(o => o.classList.remove('selected'));
+            document.getElementById('sideInput').value = 'buy';
+            document.getElementById('convertToInput').value = 'none';
+            updatePreview();
+        }
+        
+        function addToActivityFeed(message) {
+            const container = document.getElementById('activityFeed');
+            
+            // Remove empty state if present
+            const emptyState = container.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            // Create new activity item
+            const feedItem = document.createElement('div');
+            feedItem.className = 'feed-item';
+            feedItem.innerHTML = `
+                <div class="feed-header-item">
+                    <div class="feed-action">Order Executed</div>
+                    <div class="feed-time">Just now</div>
+                </div>
+                <div class="feed-details">${message}</div>
+            `;
+            
+            // Insert at the top
+            container.insertBefore(feedItem, container.firstChild);
+            
+            // Remove old items if too many
+            const items = container.querySelectorAll('.feed-item');
+            if (items.length > 10) {
+                items[items.length - 1].remove();
+            }
+        }
+    </script>
+</body>
+</html>

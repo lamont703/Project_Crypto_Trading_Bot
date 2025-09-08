@@ -1,0 +1,704 @@
+{
+  "user": {
+    "id": "user_001",
+    "name": "Alex Johnson",
+    "email": "alex@example.com",
+    "riskProfile": "moderate",
+    "preferences": {
+      "theme": "auto",
+      "notifications": true,
+      "defaultExchange": "binance",
+      "currency": "USD"
+    },
+    "createdAt": "2024-01-15T10:30:00Z",
+    "lastLogin": "2024-01-20T14:22:00Z"
+  },
+  "portfolio": {
+    "totalValue": 10500.00,
+    "totalPnl": 500.00,
+    "totalPnlPercent": 0.05,
+    "dailyPnl": 125.00,
+    "dailyPnlPercent": 0.012,
+    "winRate": 0.65,
+    "totalTrades": 20,
+    "winningTrades": 13,
+    "losingTrades": 7,
+    "avgTimeInTrade": 4.2,
+    "balances": {
+      "BTC": 0.5,
+      "ETH": 2.0,
+      "SOL": 10.0,
+      "USDT": 2500.00,
+      "USDC": 500.00
+    }
+  },
+  "positions": [
+    {
+      "id": "position_001",
+      "asset": "BTC",
+      "side": "long",
+      "size": 0.5,
+      "entryPrice": 45000.00,
+      "currentPrice": 46500.00,
+      "unrealizedPnl": 750.00,
+      "unrealizedPnlPercent": 0.033,
+      "entryTime": "2024-01-20T10:30:00Z",
+      "timeInTrade": 3.5,
+      "stopLoss": 42750.00,
+      "takeProfit": 49500.00,
+      "riskAmount": 1125.00,
+      "isActive": true,
+      "tags": ["range_trading", "btc_strategy"]
+    },
+    {
+      "id": "position_002",
+      "asset": "ETH",
+      "side": "long",
+      "size": 2.0,
+      "entryPrice": 2950.00,
+      "currentPrice": 3012.50,
+      "unrealizedPnl": 125.00,
+      "unrealizedPnlPercent": 0.021,
+      "entryTime": "2024-01-20T13:10:00Z",
+      "timeInTrade": 1.2,
+      "stopLoss": 2802.50,
+      "takeProfit": 3245.00,
+      "riskAmount": 295.00,
+      "isActive": true,
+      "tags": ["momentum", "eth_strategy"]
+    },
+    {
+      "id": "position_003",
+      "asset": "SOL",
+      "side": "long",
+      "size": 10.0,
+      "entryPrice": 95.00,
+      "currentPrice": 93.30,
+      "unrealizedPnl": -17.00,
+      "unrealizedPnlPercent": -0.018,
+      "entryTime": "2024-01-20T12:15:00Z",
+      "timeInTrade": 2.1,
+      "stopLoss": 90.25,
+      "takeProfit": 104.50,
+      "riskAmount": 47.50,
+      "isActive": true,
+      "tags": ["scalping", "sol_strategy"]
+    }
+  ],
+  "trades": [
+    {
+      "id": "trade_001",
+      "asset": "BTC",
+      "side": "buy",
+      "size": 0.1,
+      "entryPrice": 44500.00,
+      "exitPrice": 47000.00,
+      "pnl": 250.00,
+      "pnlPercent": 0.056,
+      "fees": 22.50,
+      "netPnl": 227.50,
+      "entryTime": "2024-01-19T10:30:00Z",
+      "exitTime": "2024-01-19T14:22:00Z",
+      "duration": 3.87,
+      "tags": ["range_trading", "profitable"]
+    },
+    {
+      "id": "trade_002",
+      "asset": "ETH",
+      "side": "buy",
+      "size": 1.5,
+      "entryPrice": 2800.00,
+      "exitPrice": 2920.00,
+      "pnl": 180.00,
+      "pnlPercent": 0.043,
+      "fees": 12.60,
+      "netPnl": 167.40,
+      "entryTime": "2024-01-18T09:15:00Z",
+      "exitTime": "2024-01-18T11:45:00Z",
+      "duration": 2.5,
+      "tags": ["momentum", "profitable"]
+    },
+    {
+      "id": "trade_003",
+      "asset": "SOL",
+      "side": "buy",
+      "size": 8.0,
+      "entryPrice": 98.00,
+      "exitPrice": 88.50,
+      "pnl": -76.00,
+      "pnlPercent": -0.097,
+      "fees": 7.08,
+      "netPnl": -83.08,
+      "entryTime": "2024-01-17T14:20:00Z",
+      "exitTime": "2024-01-17T16:30:00Z",
+      "duration": 2.17,
+      "tags": ["scalping", "loss"]
+    },
+    {
+      "id": "trade_004",
+      "asset": "BTC",
+      "side": "buy",
+      "size": 0.2,
+      "entryPrice": 45200.00,
+      "exitPrice": 46800.00,
+      "pnl": 320.00,
+      "pnlPercent": 0.035,
+      "fees": 18.72,
+      "netPnl": 301.28,
+      "entryTime": "2024-01-16T08:00:00Z",
+      "exitTime": "2024-01-16T12:15:00Z",
+      "duration": 4.25,
+      "tags": ["range_trading", "profitable"]
+    },
+    {
+      "id": "trade_005",
+      "asset": "ETH",
+      "side": "buy",
+      "size": 1.0,
+      "entryPrice": 2950.00,
+      "exitPrice": 3100.00,
+      "pnl": 150.00,
+      "pnlPercent": 0.051,
+      "fees": 6.20,
+      "netPnl": 143.80,
+      "entryTime": "2024-01-15T13:30:00Z",
+      "exitTime": "2024-01-15T15:45:00Z",
+      "duration": 2.25,
+      "tags": ["momentum", "profitable"]
+    }
+  ],
+  "strategies": [
+    {
+      "id": "strategy_001",
+      "name": "BTC Range Trading",
+      "description": "Buy BTC when price drops 5%, sell when up 10%",
+      "isActive": true,
+      "riskLevel": "moderate",
+      "maxPositionSize": 0.1,
+      "rules": [
+        {
+          "id": "rule_001",
+          "condition": {
+            "type": "price_change",
+            "asset": "BTC",
+            "operator": "<=",
+            "value": -0.05,
+            "timeframe": "1h"
+          },
+          "action": {
+            "type": "buy",
+            "asset": "BTC",
+            "amount": 0.5,
+            "orderType": "market"
+          }
+        },
+        {
+          "id": "rule_002",
+          "condition": {
+            "type": "price_change",
+            "asset": "BTC",
+            "operator": ">=",
+            "value": 0.10,
+            "timeframe": "1h"
+          },
+          "action": {
+            "type": "sell",
+            "asset": "BTC",
+            "amount": 0.5,
+            "orderType": "market",
+            "convertTo": "USDT"
+          }
+        }
+      ],
+      "createdAt": "2024-01-15T10:30:00Z",
+      "lastModified": "2024-01-20T14:22:00Z"
+    },
+    {
+      "id": "strategy_002",
+      "name": "ETH Momentum Strategy",
+      "description": "Buy ETH on momentum, sell on reversal",
+      "isActive": false,
+      "riskLevel": "aggressive",
+      "maxPositionSize": 0.2,
+      "rules": [
+        {
+          "id": "rule_003",
+          "condition": {
+            "type": "price_change",
+            "asset": "ETH",
+            "operator": ">=",
+            "value": 0.03,
+            "timeframe": "15m"
+          },
+          "action": {
+            "type": "buy",
+            "asset": "ETH",
+            "amount": 0.3,
+            "orderType": "market"
+          }
+        },
+        {
+          "id": "rule_004",
+          "condition": {
+            "type": "price_change",
+            "asset": "ETH",
+            "operator": "<=",
+            "value": -0.02,
+            "timeframe": "15m"
+          },
+          "action": {
+            "type": "sell",
+            "asset": "ETH",
+            "amount": 0.3,
+            "orderType": "market",
+            "convertTo": "USDT"
+          }
+        }
+      ],
+      "createdAt": "2024-01-18T09:15:00Z",
+      "lastModified": "2024-01-19T16:30:00Z"
+    }
+  ],
+  "marketData": {
+    "tickers": [
+      {
+        "asset": "BTC",
+        "price": 45100.00,
+        "change24h": 1250.00,
+        "change24hPercent": 0.028,
+        "volume24h": 28500000000.00,
+        "marketCap": 850000000000.00,
+        "rank": 1,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "ETH",
+        "price": 3012.50,
+        "change24h": 85.20,
+        "change24hPercent": 0.029,
+        "volume24h": 15200000000.00,
+        "marketCap": 362000000000.00,
+        "rank": 2,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "SOL",
+        "price": 93.30,
+        "change24h": -2.10,
+        "change24hPercent": -0.022,
+        "volume24h": 2100000000.00,
+        "marketCap": 40200000000.00,
+        "rank": 3,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "ADA",
+        "price": 0.485,
+        "change24h": 0.015,
+        "change24hPercent": 0.032,
+        "volume24h": 850000000.00,
+        "marketCap": 17100000000.00,
+        "rank": 4,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "DOT",
+        "price": 6.85,
+        "change24h": -0.25,
+        "change24hPercent": -0.035,
+        "volume24h": 420000000.00,
+        "marketCap": 8900000000.00,
+        "rank": 5,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "MATIC",
+        "price": 0.92,
+        "change24h": 0.08,
+        "change24hPercent": 0.095,
+        "volume24h": 680000000.00,
+        "marketCap": 8100000000.00,
+        "rank": 6,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "AVAX",
+        "price": 28.50,
+        "change24h": 1.20,
+        "change24hPercent": 0.044,
+        "volume24h": 520000000.00,
+        "marketCap": 11200000000.00,
+        "rank": 7,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "LINK",
+        "price": 14.25,
+        "change24h": -0.35,
+        "change24hPercent": -0.024,
+        "volume24h": 380000000.00,
+        "marketCap": 7800000000.00,
+        "rank": 8,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "UNI",
+        "price": 6.80,
+        "change24h": 0.25,
+        "change24hPercent": 0.038,
+        "volume24h": 290000000.00,
+        "marketCap": 5100000000.00,
+        "rank": 9,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      },
+      {
+        "asset": "AAVE",
+        "price": 95.50,
+        "change24h": 3.20,
+        "change24hPercent": 0.035,
+        "volume24h": 180000000.00,
+        "marketCap": 1400000000.00,
+        "rank": 10,
+        "lastUpdate": "2024-01-20T14:22:00Z"
+      }
+    ],
+    "priceHistory": {
+      "BTC": [
+        {
+          "timestamp": "2024-01-20T13:00:00Z",
+          "open": 44800.00,
+          "high": 45250.00,
+          "low": 44600.00,
+          "close": 45100.00,
+          "volume": 1250.5,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T12:00:00Z",
+          "open": 44500.00,
+          "high": 44900.00,
+          "low": 44300.00,
+          "close": 44800.00,
+          "volume": 1180.2,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T11:00:00Z",
+          "open": 44200.00,
+          "high": 44600.00,
+          "low": 44000.00,
+          "close": 44500.00,
+          "volume": 1350.8,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T10:00:00Z",
+          "open": 43800.00,
+          "high": 44300.00,
+          "low": 43600.00,
+          "close": 44200.00,
+          "volume": 1420.3,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T09:00:00Z",
+          "open": 43500.00,
+          "high": 43900.00,
+          "low": 43300.00,
+          "close": 43800.00,
+          "volume": 1280.7,
+          "timeframe": "1h"
+        }
+      ],
+      "ETH": [
+        {
+          "timestamp": "2024-01-20T13:00:00Z",
+          "open": 2980.00,
+          "high": 3020.00,
+          "low": 2960.00,
+          "close": 3012.50,
+          "volume": 8500.2,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T12:00:00Z",
+          "open": 2950.00,
+          "high": 2990.00,
+          "low": 2930.00,
+          "close": 2980.00,
+          "volume": 8200.5,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T11:00:00Z",
+          "open": 2920.00,
+          "high": 2960.00,
+          "low": 2900.00,
+          "close": 2950.00,
+          "volume": 8800.1,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T10:00:00Z",
+          "open": 2880.00,
+          "high": 2930.00,
+          "low": 2860.00,
+          "close": 2920.00,
+          "volume": 9100.8,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T09:00:00Z",
+          "open": 2850.00,
+          "high": 2890.00,
+          "low": 2830.00,
+          "close": 2880.00,
+          "volume": 8600.3,
+          "timeframe": "1h"
+        }
+      ],
+      "SOL": [
+        {
+          "timestamp": "2024-01-20T13:00:00Z",
+          "open": 94.50,
+          "high": 95.20,
+          "low": 92.80,
+          "close": 93.30,
+          "volume": 25000.5,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T12:00:00Z",
+          "open": 95.80,
+          "high": 96.50,
+          "low": 94.00,
+          "close": 94.50,
+          "volume": 28000.2,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T11:00:00Z",
+          "open": 96.20,
+          "high": 97.00,
+          "low": 95.50,
+          "close": 95.80,
+          "volume": 26000.8,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T10:00:00Z",
+          "open": 95.00,
+          "high": 96.50,
+          "low": 94.20,
+          "close": 96.20,
+          "volume": 30000.1,
+          "timeframe": "1h"
+        },
+        {
+          "timestamp": "2024-01-20T09:00:00Z",
+          "open": 93.50,
+          "high": 95.50,
+          "low": 92.80,
+          "close": 95.00,
+          "volume": 27000.7,
+          "timeframe": "1h"
+        }
+      ]
+    }
+  },
+  "news": [
+    {
+      "id": "news_001",
+      "asset": "BTC",
+      "timestamp": "2024-01-20T14:22:00Z",
+      "score": 0.75,
+      "confidence": 0.85,
+      "source": "CoinDesk",
+      "headline": "Bitcoin reaches new all-time high as institutional adoption accelerates",
+      "summary": "Bitcoin price surges past $50,000 as major corporations announce crypto adoption plans. Market sentiment remains bullish with increased trading volume.",
+      "impact": "positive",
+      "category": "price_movement",
+      "tags": ["bitcoin", "price", "bullish", "institutional"]
+    },
+    {
+      "id": "news_002",
+      "asset": "ETH",
+      "timestamp": "2024-01-20T13:45:00Z",
+      "score": 0.60,
+      "confidence": 0.80,
+      "source": "Ethereum Foundation",
+      "headline": "Ethereum 2.0 upgrade shows promising results in testnet",
+      "summary": "Latest Ethereum 2.0 testnet demonstrates improved scalability and reduced gas fees. Developers optimistic about mainnet launch timeline.",
+      "impact": "positive",
+      "category": "technology",
+      "tags": ["ethereum", "upgrade", "scalability", "gas_fees"]
+    },
+    {
+      "id": "news_003",
+      "asset": "SOL",
+      "timestamp": "2024-01-20T12:30:00Z",
+      "score": -0.40,
+      "confidence": 0.70,
+      "source": "Solana Labs",
+      "headline": "Solana network experiences brief congestion during high traffic",
+      "summary": "Solana blockchain faced temporary congestion issues during peak trading hours. Network stability concerns raised by some users.",
+      "impact": "negative",
+      "category": "network",
+      "tags": ["solana", "congestion", "network", "stability"]
+    },
+    {
+      "id": "news_004",
+      "asset": "BTC",
+      "timestamp": "2024-01-20T11:15:00Z",
+      "score": 0.85,
+      "confidence": 0.90,
+      "source": "Reuters",
+      "headline": "Major bank announces Bitcoin custody services for institutional clients",
+      "summary": "Leading financial institution launches Bitcoin custody and trading services, signaling mainstream adoption of cryptocurrency.",
+      "impact": "positive",
+      "category": "adoption",
+      "tags": ["bitcoin", "banking", "custody", "institutional"]
+    },
+    {
+      "id": "news_005",
+      "asset": "ETH",
+      "timestamp": "2024-01-20T10:00:00Z",
+      "score": 0.30,
+      "confidence": 0.75,
+      "source": "DeFi Pulse",
+      "headline": "Ethereum DeFi protocols see increased TVL despite market volatility",
+      "summary": "Total Value Locked in Ethereum DeFi protocols continues to grow, showing resilience in decentralized finance sector.",
+      "impact": "positive",
+      "category": "defi",
+      "tags": ["ethereum", "defi", "tvl", "growth"]
+    }
+  ],
+  "sentiment": [
+    {
+      "id": "sentiment_001",
+      "asset": "BTC",
+      "timestamp": "2024-01-20T14:22:00Z",
+      "score": 0.75,
+      "confidence": 0.85,
+      "source": "news_api",
+      "headline": "Bitcoin reaches new all-time high",
+      "summary": "Bitcoin price surges past $50,000...",
+      "impact": "positive",
+      "category": "price_movement",
+      "tags": ["bitcoin", "price", "bullish"]
+    },
+    {
+      "id": "sentiment_002",
+      "asset": "ETH",
+      "timestamp": "2024-01-20T13:45:00Z",
+      "score": 0.60,
+      "confidence": 0.80,
+      "source": "news_api",
+      "headline": "Ethereum 2.0 upgrade shows promising results",
+      "summary": "Latest Ethereum 2.0 testnet demonstrates...",
+      "impact": "positive",
+      "category": "technology",
+      "tags": ["ethereum", "upgrade", "scalability"]
+    },
+    {
+      "id": "sentiment_003",
+      "asset": "SOL",
+      "timestamp": "2024-01-20T12:30:00Z",
+      "score": -0.40,
+      "confidence": 0.70,
+      "source": "news_api",
+      "headline": "Solana network experiences brief congestion",
+      "summary": "Solana blockchain faced temporary congestion...",
+      "impact": "negative",
+      "category": "network",
+      "tags": ["solana", "congestion", "network"]
+    }
+  ],
+  "backtestResults": [
+    {
+      "id": "backtest_001",
+      "strategyId": "strategy_001",
+      "asset": "BTC",
+      "startDate": "2024-01-01T00:00:00Z",
+      "endDate": "2024-01-20T23:59:59Z",
+      "initialCapital": 10000.00,
+      "finalCapital": 11500.00,
+      "totalReturn": 0.15,
+      "totalReturnPercent": 15.0,
+      "maxDrawdown": -0.08,
+      "maxDrawdownPercent": -8.0,
+      "winRate": 0.65,
+      "profitFactor": 1.67,
+      "sharpeRatio": 1.45,
+      "totalTrades": 20,
+      "winningTrades": 13,
+      "losingTrades": 7,
+      "avgWin": 250.00,
+      "avgLoss": -150.00,
+      "avgTimeInTrade": 4.2,
+      "createdAt": "2024-01-20T14:22:00Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "order_001",
+      "userId": "user_001",
+      "strategyId": "strategy_001",
+      "positionId": "position_001",
+      "exchange": "binance",
+      "asset": "BTC",
+      "side": "buy",
+      "type": "market",
+      "size": 0.5,
+      "price": 45000.00,
+      "filledPrice": 45025.00,
+      "filledSize": 0.5,
+      "status": "filled",
+      "fees": 22.51,
+      "createdAt": "2024-01-20T10:30:00Z",
+      "filledAt": "2024-01-20T10:30:15Z",
+      "exchangeOrderId": "binance_12345"
+    },
+    {
+      "id": "order_002",
+      "userId": "user_001",
+      "strategyId": "strategy_002",
+      "positionId": "position_002",
+      "exchange": "binance",
+      "asset": "ETH",
+      "side": "buy",
+      "type": "market",
+      "size": 2.0,
+      "price": 2950.00,
+      "filledPrice": 2952.50,
+      "filledSize": 2.0,
+      "status": "filled",
+      "fees": 11.81,
+      "createdAt": "2024-01-20T13:10:00Z",
+      "filledAt": "2024-01-20T13:10:08Z",
+      "exchangeOrderId": "binance_12346"
+    }
+  ],
+  "settings": {
+    "notifications": {
+      "priceAlerts": true,
+      "orderUpdates": true,
+      "newsAlerts": false,
+      "strategyAlerts": true,
+      "riskWarnings": true
+    },
+    "trading": {
+      "defaultPositionSize": 0.1,
+      "maxPositionSize": 0.25,
+      "defaultStopLoss": 0.05,
+      "defaultTakeProfit": 0.10,
+      "defaultTimeInTrade": 24
+    },
+    "risk": {
+      "maxDailyLoss": 0.05,
+      "maxPositionRisk": 0.02,
+      "correlationLimit": 0.7,
+      "volatilityThreshold": 0.3
+    }
+  }
+}

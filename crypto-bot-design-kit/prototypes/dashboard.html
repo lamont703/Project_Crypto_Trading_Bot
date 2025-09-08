@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Crypto Trading Bot</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .portfolio-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .positions-section, .trades-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .section-action {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .position-item, .trade-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .position-item:hover, .trade-item:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+        
+        .position-header, .trade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .asset-name {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+        }
+        
+        .pnl {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+        }
+        
+        .pnl.positive {
+            color: var(--success-color);
+        }
+        
+        .pnl.negative {
+            color: var(--danger-color);
+        }
+        
+        .position-details, .trade-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-state-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .portfolio-overview {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .position-details, .trade-details {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <h1>📊 Dashboard</h1>
+        </div>
+        
+        <!-- Portfolio Overview -->
+        <div class="portfolio-overview" id="portfolioOverview">
+            <!-- Portfolio stats will be populated by JavaScript -->
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="market-watch.html" class="btn btn-primary btn-block">
+                📈 Market Watch
+            </a>
+            <a href="strategy-builder.html" class="btn btn-primary btn-block">
+                ⚙️ Strategy Builder
+            </a>
+            <a href="trade-execution.html" class="btn btn-primary btn-block">
+                💹 Trade Execution
+            </a>
+            <a href="backtesting.html" class="btn btn-primary btn-block">
+                📊 Backtesting
+            </a>
+        </div>
+        
+        <!-- Main Content Grid -->
+        <div class="dashboard-grid">
+            <!-- Open Positions -->
+            <div class="positions-section">
+                <div class="section-header">
+                    <h2 class="section-title">Open Positions</h2>
+                    <a href="market-watch.html" class="section-action">View All</a>
+                </div>
+                <div id="positionsList">
+                    <!-- Positions will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Recent Trades -->
+            <div class="trades-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Trades</h2>
+                    <a href="trade-execution.html" class="section-action">View All</a>
+                </div>
+                <div id="tradesList">
+                    <!-- Trades will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item active" data-screen="dashboard">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item" data-screen="market">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item" data-screen="strategy">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item" data-screen="trade">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item" data-screen="settings">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Dashboard-specific functionality
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            const app = window.cryptoBotApp;
+            
+            // Load portfolio data
+            loadPortfolioOverview(app);
+            loadPositions(app);
+            loadTrades(app);
+            
+            // Set up auto-refresh
+            setInterval(() => {
+                loadPortfolioOverview(app);
+                loadPositions(app);
+            }, 30000); // Refresh every 30 seconds
+        });
+        
+        function loadPortfolioOverview(app) {
+            const portfolio = app.getPortfolio();
+            const container = document.getElementById('portfolioOverview');
+            
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${app.formatCurrency(portfolio.totalValue)}</div>
+                    <div class="stat-label">Total Portfolio Value</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value ${portfolio.dailyPnl >= 0 ? 'text-success' : 'text-danger'}">
+                        ${portfolio.dailyPnl >= 0 ? '+' : ''}${app.formatCurrency(portfolio.dailyPnl)}
+                    </div>
+                    <div class="stat-label">24h Change</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value ${portfolio.totalPnl >= 0 ? 'text-success' : 'text-danger'}">
+                        ${portfolio.totalPnl >= 0 ? '+' : ''}${app.formatCurrency(portfolio.totalPnl)}
+                    </div>
+                    <div class="stat-label">Total P&L</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${app.formatPercentage(portfolio.winRate)}</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+            `;
+        }
+        
+        function loadPositions(app) {
+            const positions = app.getPositions();
+            const container = document.getElementById('positionsList');
+            
+            if (positions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📈</div>
+                        <div class="empty-state-text">No open positions</div>
+                        <div class="empty-state-subtext">Start trading to see your positions here</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = positions.map(position => `
+                <div class="position-item">
+                    <div class="position-header">
+                        <div class="asset-name">${position.asset}</div>
+                        <div class="pnl ${position.unrealizedPnl >= 0 ? 'positive' : 'negative'}">
+                            ${position.unrealizedPnl >= 0 ? '+' : ''}${app.formatCurrency(position.unrealizedPnl)}
+                        </div>
+                    </div>
+                    <div class="position-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Size:</span>
+                            <span class="detail-value">${position.size} ${position.asset}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Entry:</span>
+                            <span class="detail-value">${app.formatCurrency(position.entryPrice)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Current:</span>
+                            <span class="detail-value">${app.formatCurrency(position.currentPrice)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Time:</span>
+                            <span class="detail-value">${position.timeInTrade}h</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadTrades(app) {
+            const trades = app.getTrades().slice(0, 5); // Show only recent 5 trades
+            const container = document.getElementById('tradesList');
+            
+            if (trades.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💹</div>
+                        <div class="empty-state-text">No recent trades</div>
+                        <div class="empty-state-subtext">Your trade history will appear here</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = trades.map(trade => `
+                <div class="trade-item">
+                    <div class="trade-header">
+                        <div class="asset-name">${trade.asset}</div>
+                        <div class="pnl ${trade.pnl >= 0 ? 'positive' : 'negative'}">
+                            ${trade.pnl >= 0 ? '+' : ''}${app.formatCurrency(trade.pnl)}
+                        </div>
+                    </div>
+                    <div class="trade-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Size:</span>
+                            <span class="detail-value">${trade.size} ${trade.asset}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Entry:</span>
+                            <span class="detail-value">${app.formatCurrency(trade.entryPrice)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Exit:</span>
+                            <span class="detail-value">${app.formatCurrency(trade.exitPrice)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Duration:</span>
+                            <span class="detail-value">${trade.duration}h</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

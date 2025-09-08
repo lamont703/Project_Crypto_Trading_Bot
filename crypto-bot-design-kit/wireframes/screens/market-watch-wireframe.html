@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Watch Wireframe - Crypto Trading Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .wireframe-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .screen-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .app-bar {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .app-bar h2 {
+            font-size: 18px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-button {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .filter-button.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .market-table th {
+            background: #f8f9fa;
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .market-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .market-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .asset-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .price {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .change-positive {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .change-negative {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .volume {
+            color: #666;
+        }
+        
+        .market-cap {
+            color: #666;
+        }
+        
+        .chart-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .chart-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #ddd;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        
+        .chart-drawer.open {
+            transform: translateY(0);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .close-chart {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .chart-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #ccc;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .chart-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .tab-item.active {
+            color: #007bff;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .body-padding {
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .tab-bar {
+                display: none;
+            }
+            
+            .body-padding {
+                padding-bottom: 20px;
+            }
+            
+            .chart-drawer {
+                position: relative;
+                transform: none;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                margin-top: 20px;
+                max-height: none;
+            }
+            
+            .chart-drawer.open {
+                transform: none;
+            }
+        }
+        
+        .wireframe-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .wireframe-note h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .wireframe-note p {
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Market Watch Wireframe</h1>
+            <div class="breadcrumb">
+                <a href="../../index.html">← Back to Hub</a> / Wireframes / Market Watch
+            </div>
+        </div>
+        
+        <div class="wireframe-note">
+            <h4>Wireframe Note</h4>
+            <p>This is a low-fidelity wireframe showing the structure and layout of the Market Watch screen. The table shows top 10 cryptocurrencies with sorting and filtering capabilities.</p>
+        </div>
+        
+        <div class="wireframe-content">
+            <div class="screen-title">Market Watch Screen</div>
+            
+            <!-- App Bar -->
+            <div class="app-bar">
+                <h2>📈 Market Watch</h2>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter-button active">All Assets</button>
+                <button class="filter-button">Top 10</button>
+                <button class="filter-button">Gainers</button>
+                <button class="filter-button">Losers</button>
+                <button class="filter-button">High Volume</button>
+            </div>
+            
+            <!-- Search -->
+            <input type="text" class="search-box" placeholder="Search cryptocurrencies...">
+            
+            <!-- Market Table -->
+            <table class="market-table">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Price</th>
+                        <th>24h Change</th>
+                        <th>Volume</th>
+                        <th>Market Cap</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="asset-name">BTC</div>
+                            <div style="font-size: 12px; color: #666;">Bitcoin</div>
+                        </td>
+                        <td class="price">$45,100.00</td>
+                        <td class="change-positive">+$1,250.00 (+2.8%)</td>
+                        <td class="volume">$28.5B</td>
+                        <td class="market-cap">$850B</td>
+                        <td><button class="chart-button" onclick="openChart('BTC')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">ETH</div>
+                            <div style="font-size: 12px; color: #666;">Ethereum</div>
+                        </td>
+                        <td class="price">$3,012.50</td>
+                        <td class="change-positive">+$85.20 (+2.9%)</td>
+                        <td class="volume">$15.2B</td>
+                        <td class="market-cap">$362B</td>
+                        <td><button class="chart-button" onclick="openChart('ETH')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">SOL</div>
+                            <div style="font-size: 12px; color: #666;">Solana</div>
+                        </td>
+                        <td class="price">$93.30</td>
+                        <td class="change-negative">-$2.10 (-2.2%)</td>
+                        <td class="volume">$2.1B</td>
+                        <td class="market-cap">$40.2B</td>
+                        <td><button class="chart-button" onclick="openChart('SOL')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">ADA</div>
+                            <div style="font-size: 12px; color: #666;">Cardano</div>
+                        </td>
+                        <td class="price">$0.485</td>
+                        <td class="change-positive">+$0.015 (+3.2%)</td>
+                        <td class="volume">$850M</td>
+                        <td class="market-cap">$17.1B</td>
+                        <td><button class="chart-button" onclick="openChart('ADA')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">DOT</div>
+                            <div style="font-size: 12px; color: #666;">Polkadot</div>
+                        </td>
+                        <td class="price">$6.85</td>
+                        <td class="change-negative">-$0.25 (-3.5%)</td>
+                        <td class="volume">$420M</td>
+                        <td class="market-cap">$8.9B</td>
+                        <td><button class="chart-button" onclick="openChart('DOT')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">MATIC</div>
+                            <div style="font-size: 12px; color: #666;">Polygon</div>
+                        </td>
+                        <td class="price">$0.92</td>
+                        <td class="change-positive">+$0.08 (+9.5%)</td>
+                        <td class="volume">$680M</td>
+                        <td class="market-cap">$8.1B</td>
+                        <td><button class="chart-button" onclick="openChart('MATIC')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">AVAX</div>
+                            <div style="font-size: 12px; color: #666;">Avalanche</div>
+                        </td>
+                        <td class="price">$28.50</td>
+                        <td class="change-positive">+$1.20 (+4.4%)</td>
+                        <td class="volume">$520M</td>
+                        <td class="market-cap">$11.2B</td>
+                        <td><button class="chart-button" onclick="openChart('AVAX')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">LINK</div>
+                            <div style="font-size: 12px; color: #666;">Chainlink</div>
+                        </td>
+                        <td class="price">$14.25</td>
+                        <td class="change-negative">-$0.35 (-2.4%)</td>
+                        <td class="volume">$380M</td>
+                        <td class="market-cap">$7.8B</td>
+                        <td><button class="chart-button" onclick="openChart('LINK')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">UNI</div>
+                            <div style="font-size: 12px; color: #666;">Uniswap</div>
+                        </td>
+                        <td class="price">$6.80</td>
+                        <td class="change-positive">+$0.25 (+3.8%)</td>
+                        <td class="volume">$290M</td>
+                        <td class="market-cap">$5.1B</td>
+                        <td><button class="chart-button" onclick="openChart('UNI')">Chart</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="asset-name">AAVE</div>
+                            <div style="font-size: 12px; color: #666;">Aave</div>
+                        </td>
+                        <td class="price">$95.50</td>
+                        <td class="change-positive">+$3.20 (+3.5%)</td>
+                        <td class="volume">$180M</td>
+                        <td class="market-cap">$1.4B</td>
+                        <td><button class="chart-button" onclick="openChart('AAVE')">Chart</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Chart Drawer -->
+    <div class="chart-drawer" id="chartDrawer">
+        <div class="chart-header">
+            <div class="chart-title" id="chartTitle">BTC Price Chart</div>
+            <button class="close-chart" onclick="closeChart()">Close</button>
+        </div>
+        <div class="chart-placeholder">
+            <div style="text-align: center; color: #666;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
+                <div>Candlestick Chart Placeholder</div>
+                <div style="font-size: 12px; margin-top: 5px;">This would show price history with OHLC data</div>
+            </div>
+        </div>
+        <div class="chart-info">
+            <div class="info-item">
+                <div class="info-label">24h High</div>
+                <div class="info-value">$46,250</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">24h Low</div>
+                <div class="info-value">$44,800</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">24h Volume</div>
+                <div class="info-value">$28.5B</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item active">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Settings</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add basic interactivity for wireframe demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab bar navigation
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Table sorting (basic demonstration)
+            const tableHeaders = document.querySelectorAll('.market-table th');
+            tableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    alert('This would sort by: ' + this.textContent);
+                });
+            });
+        });
+        
+        function openChart(asset) {
+            const drawer = document.getElementById('chartDrawer');
+            const title = document.getElementById('chartTitle');
+            title.textContent = asset + ' Price Chart';
+            drawer.classList.add('open');
+        }
+        
+        function closeChart() {
+            const drawer = document.getElementById('chartDrawer');
+            drawer.classList.remove('open');
+        }
+    </script>
+</body>
+</html>

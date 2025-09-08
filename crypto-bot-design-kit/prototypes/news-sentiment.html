@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Sentiment - Crypto Trading Bot</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .news-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: var(--spacing-xs);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+            border-color: var(--primary-color);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .news-item {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            transition: all var(--transition-fast);
+        }
+        
+        .news-item:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+        
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .news-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+            line-height: var(--line-height-tight);
+        }
+        
+        .news-meta {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .news-source {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .news-time {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .news-summary {
+            color: var(--text-secondary);
+            line-height: var(--line-height-normal);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .sentiment-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .sentiment-score {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .sentiment-label {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .sentiment-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+        }
+        
+        .sentiment-positive {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+        }
+        
+        .sentiment-negative {
+            background-color: var(--danger-color);
+            color: var(--text-inverse);
+        }
+        
+        .sentiment-neutral {
+            background-color: var(--secondary-color);
+            color: var(--text-inverse);
+        }
+        
+        .sentiment-confidence {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+        
+        .news-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: flex-end;
+        }
+        
+        .news-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .news-btn:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .news-btn.primary {
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+            border-color: var(--primary-color);
+        }
+        
+        .news-btn.primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .exposure-control {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .exposure-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .exposure-title {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .exposure-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background-color: var(--gray-300);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .toggle-switch.active {
+            background-color: var(--primary-color);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background-color: var(--white);
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(25px);
+        }
+        
+        .exposure-preview {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .sentiment-chart {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .info-card {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .info-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-state-subtext {
+            font-size: var(--font-size-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .news-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .chart-info {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <h1>📰 News & Sentiment</h1>
+        </div>
+        
+        <!-- News Controls -->
+        <div class="news-controls">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All News</button>
+                <button class="filter-btn" data-filter="positive">Positive</button>
+                <button class="filter-btn" data-filter="negative">Negative</button>
+                <button class="filter-btn" data-filter="neutral">Neutral</button>
+                <button class="filter-btn" data-filter="recent">Recent</button>
+            </div>
+            <input type="text" class="form-control search-box" placeholder="Search news..." id="searchInput">
+        </div>
+        
+        <!-- Exposure Control -->
+        <div class="exposure-control">
+            <div class="exposure-header">
+                <h3 class="exposure-title">News-Driven Exposure Adjustment</h3>
+                <div class="exposure-toggle">
+                    <span class="text-muted">Enable</span>
+                    <div class="toggle-switch" id="exposureToggle" onclick="toggleExposure()"></div>
+                </div>
+            </div>
+            <div class="exposure-preview" id="exposurePreview">
+                When enabled, your portfolio exposure will be automatically adjusted based on news sentiment scores.
+            </div>
+        </div>
+        
+        <!-- Main Content Grid -->
+        <div class="news-grid">
+            <!-- News Feed -->
+            <div id="newsFeed">
+                <!-- News items will be populated by JavaScript -->
+            </div>
+            
+            <!-- Sentiment Chart -->
+            <div class="sentiment-chart">
+                <h3 class="chart-title">Sentiment Overview</h3>
+                <div class="chart-container" id="sentimentChart">
+                    <!-- Chart will be rendered here -->
+                </div>
+                <div class="chart-info" id="sentimentInfo">
+                    <!-- Sentiment info will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar (Mobile) -->
+    <div class="tab-bar">
+        <div class="tab-item" data-screen="dashboard">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Dashboard</div>
+        </div>
+        <div class="tab-item" data-screen="market">
+            <div class="tab-icon">📈</div>
+            <div class="tab-label">Market</div>
+        </div>
+        <div class="tab-item" data-screen="strategy">
+            <div class="tab-icon">⚙️</div>
+            <div class="tab-label">Strategy</div>
+        </div>
+        <div class="tab-item" data-screen="trade">
+            <div class="tab-icon">💹</div>
+            <div class="tab-label">Trade</div>
+        </div>
+        <div class="tab-item active" data-screen="news">
+            <div class="tab-icon">📰</div>
+            <div class="tab-label">News</div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // News & Sentiment specific functionality
+        let currentNews = [];
+        let filteredNews = [];
+        let currentFilter = 'all';
+        let exposureEnabled = false;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            const app = window.cryptoBotApp;
+            
+            // Load news data
+            loadNewsData(app);
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Set up auto-refresh
+            setInterval(() => {
+                loadNewsData(app);
+            }, 60000); // Refresh every minute
+        });
+        
+        function loadNewsData(app) {
+            const news = app.getNews();
+            currentNews = news || [];
+            filteredNews = [...currentNews];
+            
+            renderNewsFeed(app);
+            renderSentimentChart(app);
+        }
+        
+        function renderNewsFeed(app) {
+            const container = document.getElementById('newsFeed');
+            
+            if (filteredNews.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📰</div>
+                        <div class="empty-state-text">No news available</div>
+                        <div class="empty-state-subtext">Please try again later</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredNews.map(item => `
+                <div class="news-item">
+                    <div class="news-header">
+                        <h3 class="news-title">${item.headline}</h3>
+                        <div class="sentiment-score">
+                            <span class="sentiment-label">Sentiment:</span>
+                            <span class="sentiment-value ${getSentimentClass(item.score)}">
+                                ${getSentimentText(item.score)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="news-meta">
+                        <span class="news-source">${item.source}</span>
+                        <span class="news-time">${app.formatRelativeTime(item.timestamp)}</span>
+                        <span class="sentiment-confidence">Confidence: ${(item.confidence * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="news-summary">
+                        ${item.summary}
+                    </div>
+                    <div class="news-actions">
+                        <button class="news-btn" onclick="viewFullArticle('${item.id}')">
+                            View Full Article
+                        </button>
+                        <button class="news-btn primary" onclick="adjustExposure('${item.id}', ${item.score})">
+                            Adjust Exposure
+                        </button>
+                        <button class="news-btn" onclick="shareNews('${item.id}')">
+                            Share
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderSentimentChart(app) {
+            const container = document.getElementById('sentimentChart');
+            const sentiment = app.getSentiment();
+            
+            if (sentiment.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div class="empty-state-text">No sentiment data</div>
+                        <div class="empty-state-subtext">Sentiment analysis will appear here</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Generate sentiment data for chart
+            const sentimentData = sentiment.map(item => ({
+                value: item.score,
+                timestamp: item.timestamp
+            }));
+            
+            // Render chart
+            app.createCanvasChart(container, sentimentData, {
+                type: 'line',
+                color: '#007bff'
+            });
+            
+            // Update sentiment info
+            const sentimentInfo = document.getElementById('sentimentInfo');
+            const avgSentiment = sentiment.reduce((sum, item) => sum + item.score, 0) / sentiment.length;
+            const positiveCount = sentiment.filter(item => item.score > 0.2).length;
+            const negativeCount = sentiment.filter(item => item.score < -0.2).length;
+            const neutralCount = sentiment.length - positiveCount - negativeCount;
+            
+            sentimentInfo.innerHTML = `
+                <div class="info-card">
+                    <div class="info-label">Avg Sentiment</div>
+                    <div class="info-value ${getSentimentClass(avgSentiment)}">
+                        ${getSentimentText(avgSentiment)}
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Positive</div>
+                    <div class="info-value">${positiveCount}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Negative</div>
+                    <div class="info-value">${negativeCount}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Neutral</div>
+                    <div class="info-value">${neutralCount}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Total Items</div>
+                    <div class="info-value">${sentiment.length}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Last Update</div>
+                    <div class="info-value">${app.formatRelativeTime(sentiment[sentiment.length - 1]?.timestamp)}</div>
+                </div>
+            `;
+        }
+        
+        function getSentimentClass(score) {
+            if (score > 0.2) return 'sentiment-positive';
+            if (score < -0.2) return 'sentiment-negative';
+            return 'sentiment-neutral';
+        }
+        
+        function getSentimentText(score) {
+            if (score > 0.2) return 'Positive';
+            if (score < -0.2) return 'Negative';
+            return 'Neutral';
+        }
+        
+        function setupEventListeners() {
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentFilter = this.dataset.filter;
+                    applyFilter();
+                });
+            });
+            
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                filteredNews = currentNews.filter(item => 
+                    item.headline.toLowerCase().includes(query) ||
+                    item.summary.toLowerCase().includes(query) ||
+                    item.source.toLowerCase().includes(query)
+                );
+                renderNewsFeed(window.cryptoBotApp);
+            });
+        }
+        
+        function applyFilter() {
+            switch (currentFilter) {
+                case 'all':
+                    filteredNews = [...currentNews];
+                    break;
+                case 'positive':
+                    filteredNews = currentNews.filter(item => item.score > 0.2);
+                    break;
+                case 'negative':
+                    filteredNews = currentNews.filter(item => item.score < -0.2);
+                    break;
+                case 'neutral':
+                    filteredNews = currentNews.filter(item => item.score >= -0.2 && item.score <= 0.2);
+                    break;
+                case 'recent':
+                    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+                    filteredNews = currentNews.filter(item => new Date(item.timestamp) > oneDayAgo);
+                    break;
+            }
+            renderNewsFeed(window.cryptoBotApp);
+        }
+        
+        function toggleExposure() {
+            const toggle = document.getElementById('exposureToggle');
+            const preview = document.getElementById('exposurePreview');
+            
+            exposureEnabled = !exposureEnabled;
+            toggle.classList.toggle('active');
+            
+            if (exposureEnabled) {
+                preview.textContent = 'News-driven exposure adjustment is now enabled. Your portfolio will be automatically adjusted based on sentiment scores.';
+                window.cryptoBotApp.showToast('News-driven exposure adjustment enabled', 'success');
+            } else {
+                preview.textContent = 'When enabled, your portfolio exposure will be automatically adjusted based on news sentiment scores.';
+                window.cryptoBotApp.showToast('News-driven exposure adjustment disabled', 'info');
+            }
+        }
+        
+        function viewFullArticle(newsId) {
+            window.cryptoBotApp.showToast('Full article view not implemented in demo', 'info');
+        }
+        
+        function adjustExposure(newsId, score) {
+            if (!exposureEnabled) {
+                window.cryptoBotApp.showToast('Please enable news-driven exposure adjustment first', 'warning');
+                return;
+            }
+            
+            const adjustment = Math.abs(score) * 0.1; // 0% to 10% adjustment
+            const direction = score > 0 ? 'increase' : 'decrease';
+            
+            window.cryptoBotApp.showToast(`Exposure ${direction}d by ${(adjustment * 100).toFixed(1)}% based on news sentiment`, 'success');
+            window.cryptoBotApp.announce(`Portfolio exposure ${direction}d by ${(adjustment * 100).toFixed(1)}%`);
+        }
+        
+        function shareNews(newsId) {
+            if (navigator.share) {
+                const newsItem = currentNews.find(item => item.id === newsId);
+                if (newsItem) {
+                    navigator.share({
+                        title: newsItem.headline,
+                        text: newsItem.summary,
+                        url: window.location.href
+                    });
+                }
+            } else {
+                window.cryptoBotApp.showToast('News sharing not available on this device', 'info');
+            }
+        }
+    </script>
+</body>
+</html>
