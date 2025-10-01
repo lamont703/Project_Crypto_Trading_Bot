@@ -1,0 +1,394 @@
+{
+  "user": {
+    "id": "user_001",
+    "name": "Alex Johnson",
+    "email": "alex@example.com",
+    "riskProfile": "moderate",
+    "preferences": {
+      "theme": "auto",
+      "notifications": true,
+      "defaultExchange": "binance",
+      "currency": "USD"
+    },
+    "createdAt": "2024-01-15T10:30:00Z",
+    "lastLogin": "2024-01-20T14:22:00Z"
+  },
+  "portfolio": {
+    "totalValue": 10500.00,
+    "totalPnl": 500.00,
+    "totalPnlPercent": 0.05,
+    "dailyPnl": 125.00,
+    "dailyPnlPercent": 0.012,
+    "winRate": 0.65,
+    "totalTrades": 20,
+    "winningTrades": 13,
+    "losingTrades": 7,
+    "avgTimeInTrade": 4.2,
+    "balances": {
+      "BTC": 0.5,
+      "ETH": 2.0,
+      "SOL": 10.0,
+      "USDT": 2500.00,
+      "USDC": 500.00
+    }
+  },
+  "signals": [
+    {
+      "id": "signal_001",
+      "type": "BUY",
+      "asset": "BTC",
+      "confidence": 85,
+      "price": 46500,
+      "timestamp": "2024-01-20T14:30:00Z",
+      "indicators": {
+        "rsi": 28,
+        "macd": "bullish",
+        "sma20": 45000,
+        "sma50": 44000
+      },
+      "reasoning": "Oversold conditions with bullish momentum",
+      "strategy": "RSI Strategy",
+      "isActive": true
+    },
+    {
+      "id": "signal_002",
+      "type": "SELL",
+      "asset": "ETH",
+      "confidence": 72,
+      "price": 2400,
+      "timestamp": "2024-01-20T14:25:00Z",
+      "indicators": {
+        "rsi": 75,
+        "macd": "bearish",
+        "sma20": 2450,
+        "sma50": 2500
+      },
+      "reasoning": "Overbought conditions with bearish divergence",
+      "strategy": "MACD Strategy",
+      "isActive": true
+    },
+    {
+      "id": "signal_003",
+      "type": "HOLD",
+      "asset": "SOL",
+      "confidence": 60,
+      "price": 95,
+      "timestamp": "2024-01-20T14:20:00Z",
+      "indicators": {
+        "rsi": 45,
+        "macd": "neutral",
+        "sma20": 94,
+        "sma50": 96
+      },
+      "reasoning": "Neutral conditions, waiting for confirmation",
+      "strategy": "Combined Strategy",
+      "isActive": true
+    }
+  ],
+  "positions": [
+    {
+      "id": "position_001",
+      "asset": "BTC",
+      "side": "long",
+      "size": 0.5,
+      "entryPrice": 45000.00,
+      "currentPrice": 46500.00,
+      "unrealizedPnl": 750.00,
+      "unrealizedPnlPercent": 0.033,
+      "entryTime": "2024-01-20T10:30:00Z",
+      "timeInTrade": 3.5,
+      "stopLoss": 42750.00,
+      "takeProfit": 49500.00,
+      "riskAmount": 1125.00,
+      "isActive": true,
+      "strategy": "RSI Strategy"
+    },
+    {
+      "id": "position_002",
+      "asset": "ETH",
+      "side": "short",
+      "size": 1.0,
+      "entryPrice": 2500.00,
+      "currentPrice": 2400.00,
+      "unrealizedPnl": 100.00,
+      "unrealizedPnlPercent": 0.04,
+      "entryTime": "2024-01-20T12:15:00Z",
+      "timeInTrade": 2.0,
+      "stopLoss": 2625.00,
+      "takeProfit": 2250.00,
+      "riskAmount": 125.00,
+      "isActive": true,
+      "strategy": "MACD Strategy"
+    }
+  ],
+  "trades": [
+    {
+      "id": "trade_001",
+      "asset": "BTC",
+      "type": "BUY",
+      "quantity": 0.1,
+      "price": 45000.00,
+      "timestamp": "2024-01-20T10:30:00Z",
+      "pnl": 150.00,
+      "pnlPercent": 0.033,
+      "status": "FILLED",
+      "strategy": "RSI Strategy",
+      "signalId": "signal_001"
+    },
+    {
+      "id": "trade_002",
+      "asset": "ETH",
+      "type": "SELL",
+      "quantity": 0.5,
+      "price": 2500.00,
+      "timestamp": "2024-01-20T12:15:00Z",
+      "pnl": 50.00,
+      "pnlPercent": 0.04,
+      "status": "FILLED",
+      "strategy": "MACD Strategy",
+      "signalId": "signal_002"
+    },
+    {
+      "id": "trade_003",
+      "asset": "SOL",
+      "type": "BUY",
+      "quantity": 5.0,
+      "price": 90.00,
+      "timestamp": "2024-01-20T08:45:00Z",
+      "pnl": 25.00,
+      "pnlPercent": 0.056,
+      "status": "FILLED",
+      "strategy": "Combined Strategy",
+      "signalId": "signal_003"
+    }
+  ],
+  "strategies": [
+    {
+      "id": "strategy_001",
+      "name": "RSI Strategy",
+      "description": "RSI-based buy/sell signals with moving average confirmation",
+      "targetAsset": "BTC",
+      "riskLevel": "moderate",
+      "indicators": ["rsi", "sma"],
+      "rules": [
+        {
+          "condition": "RSI < 30 AND Price > SMA(20)",
+          "action": "BUY 50% of portfolio",
+          "confidence": 85
+        },
+        {
+          "condition": "RSI > 70 AND Price < SMA(20)",
+          "action": "SELL 50% to USDT",
+          "confidence": 78
+        }
+      ],
+      "isActive": true,
+      "createdAt": "2024-01-15T10:30:00Z",
+      "performance": {
+        "winRate": 0.65,
+        "totalReturn": 0.245,
+        "maxDrawdown": -0.123,
+        "sharpeRatio": 1.8
+      }
+    },
+    {
+      "id": "strategy_002",
+      "name": "MACD Strategy",
+      "description": "MACD crossover strategy with trend confirmation",
+      "targetAsset": "ETH",
+      "riskLevel": "aggressive",
+      "indicators": ["macd", "ema"],
+      "rules": [
+        {
+          "condition": "MACD > Signal AND EMA(12) > EMA(26)",
+          "action": "BUY 75% of portfolio",
+          "confidence": 72
+        },
+        {
+          "condition": "MACD < Signal AND EMA(12) < EMA(26)",
+          "action": "SELL 75% to USDT",
+          "confidence": 68
+        }
+      ],
+      "isActive": true,
+      "createdAt": "2024-01-16T14:20:00Z",
+      "performance": {
+        "winRate": 0.58,
+        "totalReturn": 0.189,
+        "maxDrawdown": -0.156,
+        "sharpeRatio": 1.4
+      }
+    },
+    {
+      "id": "strategy_003",
+      "name": "Combined Strategy",
+      "description": "Multi-indicator strategy combining RSI, MACD, and moving averages",
+      "targetAsset": "SOL",
+      "riskLevel": "conservative",
+      "indicators": ["rsi", "macd", "sma", "bollinger"],
+      "rules": [
+        {
+          "condition": "RSI < 35 AND MACD > Signal AND Price > SMA(20)",
+          "action": "BUY 25% of portfolio",
+          "confidence": 82
+        },
+        {
+          "condition": "RSI > 65 AND MACD < Signal AND Price < SMA(20)",
+          "action": "SELL 25% to USDT",
+          "confidence": 75
+        }
+      ],
+      "isActive": false,
+      "createdAt": "2024-01-17T09:15:00Z",
+      "performance": {
+        "winRate": 0.71,
+        "totalReturn": 0.156,
+        "maxDrawdown": -0.089,
+        "sharpeRatio": 2.1
+      }
+    }
+  ],
+  "backtestResults": [
+    {
+      "id": "backtest_001",
+      "strategyId": "strategy_001",
+      "asset": "BTC",
+      "startDate": "2023-01-01",
+      "endDate": "2023-12-31",
+      "initialCapital": 10000,
+      "finalValue": 12450,
+      "totalReturn": 0.245,
+      "winRate": 0.65,
+      "maxDrawdown": -0.123,
+      "sharpeRatio": 1.8,
+      "profitFactor": 1.6,
+      "totalTrades": 127,
+      "avgTrade": 0.019,
+      "cagr": 0.221,
+      "status": "COMPLETED",
+      "createdAt": "2024-01-20T14:00:00Z"
+    }
+  ],
+  "marketData": {
+    "top10Tickers": [
+      {
+        "symbol": "BTC",
+        "name": "Bitcoin",
+        "price": 46500.00,
+        "change24h": 0.025,
+        "volume24h": 1234567.89,
+        "marketCap": 912345678901.23
+      },
+      {
+        "symbol": "ETH",
+        "name": "Ethereum",
+        "price": 2400.00,
+        "change24h": -0.012,
+        "volume24h": 543210.98,
+        "marketCap": 289123456789.01
+      },
+      {
+        "symbol": "SOL",
+        "name": "Solana",
+        "price": 95.00,
+        "change24h": 0.045,
+        "volume24h": 98765.43,
+        "marketCap": 41234567890.12
+      }
+    ],
+    "candles": {
+      "BTC": [
+        {
+          "timestamp": "2024-01-20T14:00:00Z",
+          "open": 46000,
+          "high": 46800,
+          "low": 45800,
+          "close": 46500,
+          "volume": 1234.56
+        },
+        {
+          "timestamp": "2024-01-20T13:00:00Z",
+          "open": 45800,
+          "high": 46200,
+          "low": 45600,
+          "close": 46000,
+          "volume": 987.65
+        }
+      ],
+      "ETH": [
+        {
+          "timestamp": "2024-01-20T14:00:00Z",
+          "open": 2380,
+          "high": 2420,
+          "low": 2370,
+          "close": 2400,
+          "volume": 5432.10
+        },
+        {
+          "timestamp": "2024-01-20T13:00:00Z",
+          "open": 2420,
+          "high": 2440,
+          "low": 2380,
+          "close": 2380,
+          "volume": 4321.09
+        }
+      ]
+    }
+  },
+  "newsSentiment": [
+    {
+      "id": "news_001",
+      "title": "Bitcoin price surges past $45k as institutional adoption grows",
+      "source": "CoinDesk",
+      "timestamp": "2024-01-20T14:00:00Z",
+      "sentimentScore": 0.85,
+      "url": "https://example.com/news/1",
+      "impact": "positive",
+      "assets": ["BTC"]
+    },
+    {
+      "id": "news_002",
+      "title": "Ethereum network upgrade announced for Q2 2024",
+      "source": "Decrypt",
+      "timestamp": "2024-01-20T13:30:00Z",
+      "sentimentScore": 0.60,
+      "url": "https://example.com/news/2",
+      "impact": "neutral",
+      "assets": ["ETH"]
+    },
+    {
+      "id": "news_003",
+      "title": "Regulatory concerns weigh on crypto markets",
+      "source": "Reuters",
+      "timestamp": "2024-01-20T13:00:00Z",
+      "sentimentScore": -0.30,
+      "url": "https://example.com/news/3",
+      "impact": "negative",
+      "assets": ["BTC", "ETH", "SOL"]
+    }
+  ],
+  "apiStatus": {
+    "nodejs": {
+      "status": "connected",
+      "uptime": "99.9%",
+      "responseTime": "45ms",
+      "lastCheck": "2024-01-20T14:30:00Z"
+    },
+    "dataPipeline": {
+      "status": "active",
+      "lastUpdate": "2024-01-20T14:29:00Z",
+      "dataQuality": "98.5%"
+    },
+    "signalEngine": {
+      "status": "running",
+      "activeStrategies": 3,
+      "signalsGenerated": 127,
+      "lastSignal": "2024-01-20T14:30:00Z"
+    },
+    "backtesting": {
+      "status": "ready",
+      "queuedJobs": 0,
+      "completedJobs": 45
+    }
+  }
+}

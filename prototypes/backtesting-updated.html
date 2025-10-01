@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtesting - AI Trading Signals MVP</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .backtest-config {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .config-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+        }
+        
+        .run-backtest-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-color) 100%);
+            color: var(--text-inverse);
+            border: none;
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            width: 100%;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .run-backtest-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .run-backtest-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .results-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .backtest-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            font-size: var(--font-size-sm);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .metric-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .chart-container {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .trades-table {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background-color: var(--bg-primary);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color-light);
+            font-weight: 600;
+        }
+        
+        .table-content {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--border-color-light);
+            align-items: center;
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row.header {
+            background-color: var(--bg-primary);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .trade-type {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .trade-type.buy {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+        }
+        
+        .trade-type.sell {
+            background-color: var(--danger-color);
+            color: var(--text-inverse);
+        }
+        
+        .pnl-positive {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .pnl-negative {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="market-watch.html" class="nav-link">Market Watch</a>
+                    <a href="strategy-builder.html" class="nav-link">Strategy Builder</a>
+                    <a href="trade-execution.html" class="nav-link">Trade Execution</a>
+                    <a href="settings.html" class="nav-link">Settings</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="breadcrumb">
+                <a href="../index.html">← Back to Hub</a> / Backtesting
+            </div>
+
+            <div class="api-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Node.js API: Connected | Backtesting Engine: Ready | Historical Data: Available</span>
+            </div>
+
+            <div class="backtest-config">
+                <h2>Backtest Configuration</h2>
+                
+                <div class="config-grid">
+                    <div class="config-section">
+                        <h3 class="section-title">Strategy Selection</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="strategySelect">Select Strategy</label>
+                                <select id="strategySelect" name="strategySelect" required>
+                                    <option value="">Choose a strategy</option>
+                                    <option value="rsi-strategy">RSI Strategy</option>
+                                    <option value="macd-strategy">MACD Strategy</option>
+                                    <option value="combined-strategy">Combined Strategy</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assetSelect">Target Asset</label>
+                                <select id="assetSelect" name="assetSelect" required>
+                                    <option value="">Select Asset</option>
+                                    <option value="BTC">Bitcoin (BTC)</option>
+                                    <option value="ETH">Ethereum (ETH)</option>
+                                    <option value="SOL">Solana (SOL)</option>
+                                    <option value="SPY">S&P 500 (SPY)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3 class="section-title">Time Period</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" id="startDate" name="startDate" value="2023-01-01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">End Date</label>
+                                <input type="date" id="endDate" name="endDate" value="2023-12-31" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3 class="section-title">Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="initialCapital">Initial Capital ($)</label>
+                                <input type="number" id="initialCapital" name="initialCapital" value="10000" min="1000" step="1000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="positionSize">Position Size (%)</label>
+                                <input type="number" id="positionSize" name="positionSize" value="50" min="10" max="100" step="10" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="stopLoss">Stop Loss (%)</label>
+                                <input type="number" id="stopLoss" name="stopLoss" value="5" min="1" max="20" step="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="takeProfit">Take Profit (%)</label>
+                                <input type="number" id="takeProfit" name="takeProfit" value="10" min="5" max="50" step="5" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="run-backtest-btn" onclick="runBacktest()">
+                    🚀 Run Backtest
+                </button>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2 class="results-title">Backtest Results</h2>
+                    <div class="backtest-status">
+                        <div class="status-dot"></div>
+                        <span>Completed</span>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalReturn">+24.5%</div>
+                        <div class="metric-label">Total Return</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="winRate">65%</div>
+                        <div class="metric-label">Win Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="maxDrawdown">-12.3%</div>
+                        <div class="metric-label">Max Drawdown</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="sharpeRatio">1.8</div>
+                        <div class="metric-label">Sharpe Ratio</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="profitFactor">1.6</div>
+                        <div class="metric-label">Profit Factor</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalTrades">127</div>
+                        <div class="metric-label">Total Trades</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgTrade">+1.9%</div>
+                        <div class="metric-label">Avg Trade</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="cagr">22.1%</div>
+                        <div class="metric-label">CAGR</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="equityChart" width="800" height="300"></canvas>
+                </div>
+
+                <div class="trades-table">
+                    <div class="table-header">
+                        <h3>Trade History</h3>
+                    </div>
+                    <div class="table-content">
+                        <div class="table-row header">
+                            <div>Date</div>
+                            <div>Type</div>
+                            <div>Price</div>
+                            <div>Quantity</div>
+                            <div>P&L</div>
+                        </div>
+                        <div id="tradesList">
+                            <!-- Trades will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, and TypeScript.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mock backtest data
+        const mockBacktestData = {
+            metrics: {
+                totalReturn: 24.5,
+                winRate: 65,
+                maxDrawdown: -12.3,
+                sharpeRatio: 1.8,
+                profitFactor: 1.6,
+                totalTrades: 127,
+                avgTrade: 1.9,
+                cagr: 22.1
+            },
+            trades: [
+                { date: '2023-01-15', type: 'BUY', price: 17000, quantity: 0.1, pnl: 150 },
+                { date: '2023-01-20', type: 'SELL', price: 18500, quantity: 0.1, pnl: 150 },
+                { date: '2023-02-01', type: 'BUY', price: 18000, quantity: 0.1, pnl: -100 },
+                { date: '2023-02-05', type: 'SELL', price: 17500, quantity: 0.1, pnl: -100 },
+                { date: '2023-02-10', type: 'BUY', price: 19000, quantity: 0.1, pnl: 200 },
+                { date: '2023-02-15', type: 'SELL', price: 21000, quantity: 0.1, pnl: 200 },
+                { date: '2023-03-01', type: 'BUY', price: 20000, quantity: 0.1, pnl: 300 },
+                { date: '2023-03-10', type: 'SELL', price: 23000, quantity: 0.1, pnl: 300 },
+                { date: '2023-03-15', type: 'BUY', price: 22000, quantity: 0.1, pnl: -150 },
+                { date: '2023-03-20', type: 'SELL', price: 20800, quantity: 0.1, pnl: -150 }
+            ],
+            equityCurve: [
+                { date: '2023-01-01', value: 10000 },
+                { date: '2023-02-01', value: 10500 },
+                { date: '2023-03-01', value: 11200 },
+                { date: '2023-04-01', value: 10800 },
+                { date: '2023-05-01', value: 12000 },
+                { date: '2023-06-01', value: 12500 },
+                { date: '2023-07-01', value: 11800 },
+                { date: '2023-08-01', value: 13000 },
+                { date: '2023-09-01', value: 13500 },
+                { date: '2023-10-01', value: 12800 },
+                { date: '2023-11-01', value: 14000 },
+                { date: '2023-12-01', value: 14500 },
+                { date: '2023-12-31', value: 12450 }
+            ]
+        };
+
+        // Run backtest
+        function runBacktest() {
+            const strategySelect = document.getElementById('strategySelect');
+            const assetSelect = document.getElementById('assetSelect');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            const initialCapital = document.getElementById('initialCapital');
+
+            // Validate inputs
+            if (!strategySelect.value || !assetSelect.value) {
+                alert('Please select a strategy and asset before running backtest.');
+                return;
+            }
+
+            // Disable button and show loading
+            const button = document.querySelector('.run-backtest-btn');
+            button.disabled = true;
+            button.textContent = '🔄 Running Backtest...';
+
+            // Simulate API call to Node.js backend
+            setTimeout(() => {
+                // Show results
+                document.getElementById('resultsSection').style.display = 'block';
+                
+                // Update metrics
+                updateMetrics();
+                
+                // Load trades
+                loadTrades();
+                
+                // Draw chart
+                drawEquityChart();
+                
+                // Reset button
+                button.disabled = false;
+                button.textContent = '🚀 Run Backtest';
+                
+                // Scroll to results
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+                
+                console.log('Backtest completed via Node.js API');
+            }, 2000);
+        }
+
+        // Update metrics
+        function updateMetrics() {
+            const metrics = mockBacktestData.metrics;
+            
+            document.getElementById('totalReturn').textContent = `+${metrics.totalReturn}%`;
+            document.getElementById('winRate').textContent = `${metrics.winRate}%`;
+            document.getElementById('maxDrawdown').textContent = `${metrics.maxDrawdown}%`;
+            document.getElementById('sharpeRatio').textContent = metrics.sharpeRatio.toFixed(1);
+            document.getElementById('profitFactor').textContent = metrics.profitFactor.toFixed(1);
+            document.getElementById('totalTrades').textContent = metrics.totalTrades;
+            document.getElementById('avgTrade').textContent = `+${metrics.avgTrade}%`;
+            document.getElementById('cagr').textContent = `${metrics.cagr}%`;
+        }
+
+        // Load trades
+        function loadTrades() {
+            const tradesList = document.getElementById('tradesList');
+            tradesList.innerHTML = '';
+
+            mockBacktestData.trades.forEach(trade => {
+                const tradeRow = document.createElement('div');
+                tradeRow.className = 'table-row';
+                tradeRow.innerHTML = `
+                    <div>${new Date(trade.date).toLocaleDateString()}</div>
+                    <div><span class="trade-type ${trade.type.toLowerCase()}">${trade.type}</span></div>
+                    <div>$${trade.price.toLocaleString()}</div>
+                    <div>${trade.quantity}</div>
+                    <div class="${trade.pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                        ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl}
+                    </div>
+                `;
+                tradesList.appendChild(tradeRow);
+            });
+        }
+
+        // Draw equity curve chart
+        function drawEquityChart() {
+            const canvas = document.getElementById('equityChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Set up chart
+            const padding = 40;
+            const chartWidth = canvas.width - 2 * padding;
+            const chartHeight = canvas.height - 2 * padding;
+            
+            const data = mockBacktestData.equityCurve;
+            const minValue = Math.min(...data.map(d => d.value));
+            const maxValue = Math.max(...data.map(d => d.value));
+            const valueRange = maxValue - minValue;
+            
+            // Draw axes
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Draw equity curve
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            data.forEach((point, index) => {
+                const x = padding + (index / (data.length - 1)) * chartWidth;
+                const y = canvas.height - padding - ((point.value - minValue) / valueRange) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Draw data points
+            ctx.fillStyle = '#007bff';
+            data.forEach((point, index) => {
+                const x = padding + (index / (data.length - 1)) * chartWidth;
+                const y = canvas.height - padding - ((point.value - minValue) / valueRange) * chartHeight;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Add labels
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Equity Curve', canvas.width / 2, 20);
+            
+            // Y-axis labels
+            ctx.textAlign = 'right';
+            ctx.fillText('$' + maxValue.toLocaleString(), padding - 10, padding + 5);
+            ctx.fillText('$' + minValue.toLocaleString(), padding - 10, canvas.height - padding + 5);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates
+            const today = new Date();
+            const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+            
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            document.getElementById('startDate').value = oneYearAgo.toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

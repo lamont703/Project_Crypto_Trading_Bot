@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trading Bot Design Kit</title>
+    <link rel="stylesheet" href="prototypes/components.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-color) 100%);
+            color: var(--text-inverse);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .hero-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.9;
+        }
+        
+        .hero-description {
+            font-size: var(--font-size-lg);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-xl);
+            opacity: 0.8;
+            line-height: var(--line-height-relaxed);
+        }
+        
+        .getting-started {
+            background-color: var(--warning-color);
+            color: var(--text-primary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+        }
+        
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .nav-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .section-icon {
+            font-size: var(--font-size-2xl);
+            margin-right: var(--spacing-md);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .section-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            line-height: var(--line-height-normal);
+        }
+        
+        .nav-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+        
+        .nav-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            display: block;
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-color);
+        }
+        
+        .nav-card-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .nav-card-description {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            line-height: var(--line-height-normal);
+        }
+        
+        .features-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .features-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--primary-color);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+        }
+        
+        .feature-icon {
+            font-size: var(--font-size-xl);
+            margin-top: var(--spacing-xs);
+        }
+        
+        .feature-content h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+        
+        .feature-content p {
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: var(--line-height-normal);
+        }
+        
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .footer-description {
+            margin-bottom: var(--spacing-lg);
+            line-height: var(--line-height-normal);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (min-width: 768px) {
+            .navigation-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .nav-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .navigation-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .nav-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">🚀 Crypto Trading Bot Design Kit</h1>
+            <p class="hero-subtitle">Complete Mobile-First Trading Bot Design System</p>
+            <p class="hero-description">
+                A comprehensive design kit featuring documentation, wireframes, and interactive prototypes 
+                for a modern cryptocurrency trading bot application.
+            </p>
+        </div>
+        
+        <!-- Getting Started -->
+        <div class="getting-started">
+            <strong>Getting Started:</strong> Open any HTML file in your browser to explore the design kit. 
+            All files are self-contained and require no build step.
+        </div>
+        
+        <!-- Navigation Grid -->
+        <div class="navigation-grid">
+            <!-- Documentation Section -->
+            <div class="nav-section">
+                <div class="section-header">
+                    <div class="section-icon">📚</div>
+                    <h2 class="section-title">Documentation</h2>
+                </div>
+                <p class="section-description">
+                    Complete product specifications, technical architecture, and design guidelines.
+                </p>
+                <div class="nav-cards">
+                    <a href="docs/README.md" class="nav-card" onclick="openMarkdown('docs/README.md', this)">
+                        <div class="nav-card-title">📖 README</div>
+                        <div class="nav-card-description">Project overview and getting started guide</div>
+                    </a>
+                    <a href="docs/product-spec.md" class="nav-card" onclick="openMarkdown('docs/product-spec.md', this)">
+                        <div class="nav-card-title">📋 Product Spec</div>
+                        <div class="nav-card-description">Requirements, personas, and user stories</div>
+                    </a>
+                    <a href="docs/architecture.md" class="nav-card" onclick="openMarkdown('docs/architecture.md', this)">
+                        <div class="nav-card-title">🏗️ Architecture</div>
+                        <div class="nav-card-description">Technical architecture and system design</div>
+                    </a>
+                    <a href="docs/data-model.md" class="nav-card" onclick="openMarkdown('docs/data-model.md', this)">
+                        <div class="nav-card-title">🗄️ Data Model</div>
+                        <div class="nav-card-description">Database schema and data structures</div>
+                    </a>
+                    <a href="docs/apis.md" class="nav-card" onclick="openMarkdown('docs/apis.md', this)">
+                        <div class="nav-card-title">🔌 APIs</div>
+                        <div class="nav-card-description">API specifications and endpoints</div>
+                    </a>
+                    <a href="docs/ux-copy.md" class="nav-card" onclick="openMarkdown('docs/ux-copy.md', this)">
+                        <div class="nav-card-title">✍️ UX Copy</div>
+                        <div class="nav-card-description">UI text, messages, and content guidelines</div>
+                    </a>
+                    <a href="docs/test-plan.md" class="nav-card" onclick="openMarkdown('docs/test-plan.md', this)">
+                        <div class="nav-card-title">🧪 Test Plan</div>
+                        <div class="nav-card-description">Testing strategy and acceptance criteria</div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Wireframes Section -->
+            <div class="nav-section">
+                <div class="section-header">
+                    <div class="section-icon">📐</div>
+                    <h2 class="section-title">Wireframes</h2>
+                </div>
+                <p class="section-description">
+                    Low-fidelity structural layouts and user flow diagrams.
+                </p>
+                <div class="nav-cards">
+                    <a href="wireframes/wireframes-overview.md" class="nav-card" onclick="openMarkdown('wireframes/wireframes-overview.md', this)">
+                        <div class="nav-card-title">📋 Overview</div>
+                        <div class="nav-card-description">Wireframe guidelines and principles</div>
+                    </a>
+                    <a href="wireframes/screens/dashboard-wireframe.html" class="nav-card">
+                        <div class="nav-card-title">📊 Dashboard</div>
+                        <div class="nav-card-description">Portfolio overview and performance metrics</div>
+                    </a>
+                    <a href="wireframes/screens/market-watch-wireframe.html" class="nav-card">
+                        <div class="nav-card-title">📈 Market Watch</div>
+                        <div class="nav-card-description">Real-time market data and price monitoring</div>
+                    </a>
+                    <a href="wireframes/screens/strategy-builder-wireframe.html" class="nav-card">
+                        <div class="nav-card-title">⚙️ Strategy Builder</div>
+                        <div class="nav-card-description">IF/THEN rule composer and strategy management</div>
+                    </a>
+                    <a href="wireframes/screens/backtesting-wireframe.html" class="nav-card">
+                        <div class="nav-card-title">📊 Backtesting</div>
+                        <div class="nav-card-description">Historical strategy testing and analysis</div>
+                    </a>
+                    <a href="wireframes/screens/trade-execution-wireframe.html" class="nav-card">
+                        <div class="nav-card-title">💹 Trade Execution</div>
+                        <div class="nav-card-description">Order placement and risk management</div>
+                    </a>
+                    <a href="wireframes/screens/settings-wireframe.html" class="nav-card">
+                        <div class="nav-card-title">⚙️ Settings</div>
+                        <div class="nav-card-description">User preferences and configuration</div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Prototypes Section -->
+            <div class="nav-section">
+                <div class="section-header">
+                    <div class="section-icon">🎨</div>
+                    <h2 class="section-title">Prototypes</h2>
+                </div>
+                <p class="section-description">
+                    Interactive high-fidelity screen demonstrations with real functionality.
+                </p>
+                <div class="nav-cards">
+                    <a href="prototypes/dashboard.html" class="nav-card">
+                        <div class="nav-card-title">📊 Dashboard</div>
+                        <div class="nav-card-description">Live portfolio data and performance tracking</div>
+                    </a>
+                    <a href="prototypes/market-watch.html" class="nav-card">
+                        <div class="nav-card-title">📈 Market Watch</div>
+                        <div class="nav-card-description">Interactive market data with charts</div>
+                    </a>
+                    <a href="prototypes/strategy-builder.html" class="nav-card">
+                        <div class="nav-card-title">⚙️ Strategy Builder</div>
+                        <div class="nav-card-description">Visual rule builder with live preview</div>
+                    </a>
+                    <a href="prototypes/backtesting.html" class="nav-card">
+                        <div class="nav-card-title">📊 Backtesting</div>
+                        <div class="nav-card-description">Strategy testing with performance charts</div>
+                    </a>
+                    <a href="prototypes/trade-execution.html" class="nav-card">
+                        <div class="nav-card-title">💹 Trade Execution</div>
+                        <div class="nav-card-description">Order placement with risk management</div>
+                    </a>
+                    <a href="prototypes/news-sentiment.html" class="nav-card">
+                        <div class="nav-card-title">📰 News & Sentiment</div>
+                        <div class="nav-card-description">News feed with sentiment analysis</div>
+                    </a>
+                    <a href="prototypes/settings.html" class="nav-card">
+                        <div class="nav-card-title">⚙️ Settings</div>
+                        <div class="nav-card-description">User preferences and API configuration</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2 class="features-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-content">
+                        <h3>Mobile-First Design</h3>
+                        <p>Optimized for mobile devices with responsive layouts that scale from 375px to desktop.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌙</div>
+                    <div class="feature-content">
+                        <h3>Dark Mode Support</h3>
+                        <p>Automatic theme switching based on system preferences with smooth transitions.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">♿</div>
+                    <div class="feature-content">
+                        <h3>Accessibility Compliant</h3>
+                        <p>WCAG 2.1 AA compliant with keyboard navigation and screen reader support.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-content">
+                        <h3>No Build Step</h3>
+                        <p>Pure HTML/CSS/JS with no external dependencies. Open any file in your browser.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">��</div>
+                    <div class="feature-content">
+                        <h3>Interactive Charts</h3>
+                        <p>Canvas-based chart rendering with real-time data updates and smooth animations.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-content">
+                        <h3>Local Storage</h3>
+                        <p>Strategies and settings persist locally using browser storage APIs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <h3 class="footer-title">Crypto Trading Bot Design Kit</h3>
+            <p class="footer-description">
+                A comprehensive design system for building modern cryptocurrency trading applications. 
+                This design kit demonstrates best practices in mobile-first design, accessibility, 
+                and user experience for financial applications.
+            </p>
+            <div class="footer-links">
+                <a href="docs/README.md" class="footer-link" onclick="openMarkdown('docs/README.md', this)">Documentation</a>
+                <a href="wireframes/wireframes-overview.md" class="footer-link" onclick="openMarkdown('wireframes/wireframes-overview.md', this)">Wireframes</a>
+                <a href="prototypes/dashboard.html" class="footer-link">Prototypes</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Markdown Viewer Modal -->
+    <div class="modal" id="markdownModal">
+        <div class="modal-dialog" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Documentation</h3>
+                <button class="modal-close" onclick="closeMarkdown()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="markdownContent">
+                    <!-- Markdown content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="prototypes/app.js"></script>
+    <script>
+        // Hub-specific functionality
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for app to initialize
+            await new Promise(resolve => {
+                const checkApp = () => {
+                    if (window.cryptoBotApp) {
+                        resolve();
+                    } else {
+                        setTimeout(checkApp, 100);
+                    }
+                };
+                checkApp();
+            });
+            
+            console.log('Crypto Trading Bot Design Kit loaded successfully');
+        });
+        
+        function openMarkdown(filePath, element) {
+            event.preventDefault();
+            
+            const modal = document.getElementById('markdownModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('markdownContent');
+            
+            // Set title based on file
+            const fileName = filePath.split('/').pop().replace('.md', '');
+            title.textContent = fileName.charAt(0).toUpperCase() + fileName.slice(1).replace('-', ' ');
+            
+            // Show loading state
+            content.innerHTML = '<div class="loading-state"><div class="loading-icon">⏳</div><div class="loading-text">Loading documentation...</div></div>';
+            modal.classList.add('show');
+            
+            // Load markdown content
+            window.markdownViewer.loadMarkdownFile(filePath)
+                .then(html => {
+                    content.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading markdown:', error);
+                    content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><div class="empty-state-text">Error loading documentation</div><div class="empty-state-subtext">Please try again later</div></div>';
+                });
+        }
+        
+        function closeMarkdown() {
+            const modal = document.getElementById('markdownModal');
+            modal.classList.remove('show');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('markdownModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMarkdown();
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMarkdown();
+            }
+        });
+    </script>
+</body>
+</html>

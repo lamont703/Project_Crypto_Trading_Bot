@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Sentiment - AI Trading Signals MVP</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .sentiment-overview {
+            background: linear-gradient(135deg, var(--info-color) 0%, var(--primary-color) 100%);
+            color: var(--text-inverse);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .sentiment-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+        }
+        
+        .filters-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+        
+        .news-list {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .news-item {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color-light);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .news-item:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .news-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            line-height: var(--line-height-normal);
+        }
+        
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .news-source {
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .news-timestamp {
+            color: var(--text-secondary);
+        }
+        
+        .sentiment-score {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .sentiment-badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-align: center;
+            min-width: 60px;
+        }
+        
+        .sentiment-badge.positive {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+        }
+        
+        .sentiment-badge.negative {
+            background-color: var(--danger-color);
+            color: var(--text-inverse);
+        }
+        
+        .sentiment-badge.neutral {
+            background-color: var(--warning-color);
+            color: var(--text-primary);
+        }
+        
+        .sentiment-value {
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+        
+        .news-content {
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .news-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+        }
+        
+        .news-tags {
+            display: flex;
+            gap: var(--spacing-xs);
+            flex-wrap: wrap;
+        }
+        
+        .news-tag {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+        }
+        
+        .exposure-controls {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .exposure-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .exposure-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .exposure-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background-color: var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .toggle-switch.active {
+            background-color: var(--success-color);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+        
+        .exposure-preview {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary-color);
+        }
+        
+        .preview-content {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .filters-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            
+            .sentiment-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="market-watch.html" class="nav-link">Market Watch</a>
+                    <a href="strategy-builder.html" class="nav-link">Strategy Builder</a>
+                    <a href="backtesting.html" class="nav-link">Backtesting</a>
+                    <a href="trade-execution.html" class="nav-link">Trade Execution</a>
+                    <a href="settings.html" class="nav-link">Settings</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="breadcrumb">
+                <a href="../index.html">← Back to Hub</a> / News & Sentiment
+            </div>
+
+            <div class="api-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Node.js API: Connected | News Feed: Active | Sentiment Analysis: Running</span>
+            </div>
+
+            <div class="sentiment-overview">
+                <h2>Market Sentiment Analysis</h2>
+                <p>AI-powered news sentiment analysis for trading decisions</p>
+                <div class="sentiment-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">0.65</div>
+                        <div class="stat-label">Overall Sentiment</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">127</div>
+                        <div class="stat-label">Articles Analyzed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Accuracy Score</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Active Signals</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-section">
+                <h3>Filters & Search</h3>
+                <div class="filters-grid">
+                    <div class="form-group">
+                        <label for="searchInput">Search News</label>
+                        <input type="text" id="searchInput" placeholder="Search articles...">
+                    </div>
+                    <div class="form-group">
+                        <label for="sentimentFilter">Sentiment</label>
+                        <select id="sentimentFilter">
+                            <option value="all">All Sentiments</option>
+                            <option value="positive">Positive</option>
+                            <option value="negative">Negative</option>
+                            <option value="neutral">Neutral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assetFilter">Asset</label>
+                        <select id="assetFilter">
+                            <option value="all">All Assets</option>
+                            <option value="BTC">Bitcoin</option>
+                            <option value="ETH">Ethereum</option>
+                            <option value="SOL">Solana</option>
+                            <option value="SPY">S&P 500</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exposure-controls">
+                <div class="exposure-header">
+                    <h3 class="exposure-title">News Impact on Trading</h3>
+                    <div class="exposure-toggle">
+                        <span>Affect Exposure</span>
+                        <div class="toggle-switch active" id="exposureToggle" onclick="toggleExposure()"></div>
+                    </div>
+                </div>
+                <div class="exposure-preview" id="exposurePreview">
+                    <div class="preview-title">Current Impact Settings</div>
+                    <div class="preview-content">
+                        News sentiment is actively influencing trading decisions. Positive sentiment increases position sizes by up to 25%, while negative sentiment reduces exposure by up to 50%. This is integrated with the Node.js signal generation engine.
+                    </div>
+                </div>
+            </div>
+
+            <div class="news-list" id="newsList">
+                <!-- News items will be loaded here -->
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, and TypeScript.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mock news data
+        const mockNewsData = [
+            {
+                id: "news_001",
+                title: "Bitcoin price surges past $45k as institutional adoption grows",
+                source: "CoinDesk",
+                timestamp: "2024-01-20T14:00:00Z",
+                sentimentScore: 0.85,
+                sentiment: "positive",
+                content: "Bitcoin reached new heights today as major institutional investors continue to show confidence in the cryptocurrency market. The price surge comes amid growing adoption by traditional financial institutions.",
+                url: "https://example.com/news/1",
+                impact: "positive",
+                assets: ["BTC"],
+                tags: ["Bitcoin", "Institutional", "Adoption"]
+            },
+            {
+                id: "news_002",
+                title: "Ethereum network upgrade announced for Q2 2024",
+                source: "Decrypt",
+                timestamp: "2024-01-20T13:30:00Z",
+                sentimentScore: 0.60,
+                sentiment: "positive",
+                content: "The Ethereum Foundation has announced a major network upgrade scheduled for Q2 2024, promising improved scalability and reduced transaction costs.",
+                url: "https://example.com/news/2",
+                impact: "neutral",
+                assets: ["ETH"],
+                tags: ["Ethereum", "Upgrade", "Scalability"]
+            },
+            {
+                id: "news_003",
+                title: "Regulatory concerns weigh on crypto markets",
+                source: "Reuters",
+                timestamp: "2024-01-20T13:00:00Z",
+                sentimentScore: -0.30,
+                sentiment: "negative",
+                content: "Growing regulatory uncertainty in major markets is creating headwinds for cryptocurrency prices, with investors showing increased caution.",
+                url: "https://example.com/news/3",
+                impact: "negative",
+                assets: ["BTC", "ETH", "SOL"],
+                tags: ["Regulation", "Uncertainty", "Markets"]
+            },
+            {
+                id: "news_004",
+                title: "Solana ecosystem shows strong growth metrics",
+                source: "The Block",
+                timestamp: "2024-01-20T12:30:00Z",
+                sentimentScore: 0.75,
+                sentiment: "positive",
+                content: "Solana's ecosystem continues to demonstrate robust growth with increased developer activity and user adoption across DeFi protocols.",
+                url: "https://example.com/news/4",
+                impact: "positive",
+                assets: ["SOL"],
+                tags: ["Solana", "DeFi", "Growth"]
+            },
+            {
+                id: "news_005",
+                title: "S&P 500 reaches new all-time high",
+                source: "Bloomberg",
+                timestamp: "2024-01-20T12:00:00Z",
+                sentimentScore: 0.40,
+                sentiment: "neutral",
+                content: "The S&P 500 index reached a new all-time high today, driven by strong corporate earnings and optimistic economic outlook.",
+                url: "https://example.com/news/5",
+                impact: "neutral",
+                assets: ["SPY"],
+                tags: ["S&P 500", "Earnings", "Economy"]
+            }
+        ];
+
+        let exposureEnabled = true;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNews();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', filterNews);
+            
+            // Filter functionality
+            document.getElementById('sentimentFilter').addEventListener('change', filterNews);
+            document.getElementById('assetFilter').addEventListener('change', filterNews);
+        }
+
+        // Load news
+        function loadNews() {
+            const newsList = document.getElementById('newsList');
+            newsList.innerHTML = '';
+
+            mockNewsData.forEach(news => {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-item';
+                newsItem.onclick = () => openNewsDetails(news);
+                
+                const sentimentClass = news.sentiment;
+                const sentimentText = news.sentiment.charAt(0).toUpperCase() + news.sentiment.slice(1);
+                
+                newsItem.innerHTML = `
+                    <div class="news-header">
+                        <div class="news-title">${news.title}</div>
+                        <div class="sentiment-score">
+                            <div class="sentiment-badge ${sentimentClass}">
+                                ${sentimentText}
+                            </div>
+                            <div class="sentiment-value">
+                                ${news.sentimentScore > 0 ? '+' : ''}${(news.sentimentScore * 100).toFixed(0)}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="news-meta">
+                        <span class="news-source">${news.source}</span>
+                        <span class="news-timestamp">${new Date(news.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div class="news-content">
+                        ${news.content}
+                    </div>
+                    <div class="news-actions">
+                        <div class="news-tags">
+                            ${news.tags.map(tag => `<span class="news-tag">${tag}</span>`).join('')}
+                        </div>
+                        <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); viewFullArticle('${news.id}')">
+                            View Full Article
+                        </button>
+                    </div>
+                `;
+                newsList.appendChild(newsItem);
+            });
+        }
+
+        // Filter news
+        function filterNews() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sentimentFilter = document.getElementById('sentimentFilter').value;
+            const assetFilter = document.getElementById('assetFilter').value;
+            const newsItems = document.querySelectorAll('.news-item');
+            
+            newsItems.forEach(item => {
+                const title = item.querySelector('.news-title').textContent.toLowerCase();
+                const content = item.querySelector('.news-content').textContent.toLowerCase();
+                const sentiment = item.querySelector('.sentiment-badge').textContent.toLowerCase();
+                const tags = Array.from(item.querySelectorAll('.news-tag')).map(tag => tag.textContent.toLowerCase());
+                
+                let showItem = true;
+                
+                // Search filter
+                if (searchTerm && !title.includes(searchTerm) && !content.includes(searchTerm) && !tags.some(tag => tag.includes(searchTerm))) {
+                    showItem = false;
+                }
+                
+                // Sentiment filter
+                if (sentimentFilter !== 'all' && sentiment !== sentimentFilter) {
+                    showItem = false;
+                }
+                
+                // Asset filter
+                if (assetFilter !== 'all') {
+                    const newsData = mockNewsData.find(n => n.title === item.querySelector('.news-title').textContent);
+                    if (newsData && !newsData.assets.includes(assetFilter)) {
+                        showItem = false;
+                    }
+                }
+                
+                item.style.display = showItem ? 'block' : 'none';
+            });
+        }
+
+        // Toggle exposure
+        function toggleExposure() {
+            const toggle = document.getElementById('exposureToggle');
+            const preview = document.getElementById('exposurePreview');
+            
+            exposureEnabled = !exposureEnabled;
+            toggle.classList.toggle('active');
+            
+            if (exposureEnabled) {
+                preview.innerHTML = `
+                    <div class="preview-title">Current Impact Settings</div>
+                    <div class="preview-content">
+                        News sentiment is actively influencing trading decisions. Positive sentiment increases position sizes by up to 25%, while negative sentiment reduces exposure by up to 50%. This is integrated with the Node.js signal generation engine.
+                    </div>
+                `;
+            } else {
+                preview.innerHTML = `
+                    <div class="preview-title">Impact Disabled</div>
+                    <div class="preview-content">
+                        News sentiment is not affecting trading decisions. All trades are based purely on technical indicators and strategy rules. This setting can be changed at any time.
+                    </div>
+                `;
+            }
+            
+            console.log(`News exposure ${exposureEnabled ? 'enabled' : 'disabled'}`);
+        }
+
+        // Open news details
+        function openNewsDetails(news) {
+            alert(`News Details:\n\nTitle: ${news.title}\nSource: ${news.source}\nSentiment: ${news.sentiment} (${news.sentimentScore > 0 ? '+' : ''}${(news.sentimentScore * 100).toFixed(0)}%)\nImpact: ${news.impact}\nAssets: ${news.assets.join(', ')}\nTimestamp: ${new Date(news.timestamp).toLocaleString()}\n\nContent: ${news.content}\n\nThis would open a detailed view with:\n1. Full article content\n2. Sentiment analysis breakdown\n3. Impact on trading signals\n4. Related news articles`);
+        }
+
+        // View full article
+        function viewFullArticle(newsId) {
+            const news = mockNewsData.find(n => n.id === newsId);
+            if (news) {
+                window.open(news.url, '_blank');
+            }
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            // Update sentiment stats
+            const stats = document.querySelectorAll('.stat-value');
+            if (stats.length > 0) {
+                // Simulate small changes in sentiment
+                const currentSentiment = parseFloat(stats[0].textContent);
+                const newSentiment = currentSentiment + (Math.random() - 0.5) * 0.1;
+                stats[0].textContent = newSentiment.toFixed(2);
+            }
+        }, 15000);
+    </script>
+</body>
+</html>

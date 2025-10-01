@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AI Trading Signals MVP</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .settings-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-xl);
+        }
+        
+        .settings-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .section-description {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-xs);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .api-key-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .api-key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .api-key-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .api-key-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-dot.connected {
+            background-color: var(--success-color);
+        }
+        
+        .status-dot.disconnected {
+            background-color: var(--danger-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        
+        .risk-profile {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .risk-option {
+            padding: var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            background-color: var(--bg-primary);
+            transition: all var(--transition-fast);
+        }
+        
+        .risk-option:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-secondary);
+        }
+        
+        .risk-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        .risk-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .risk-description {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+        
+        .notification-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+        
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+        }
+        
+        .notification-info {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .notification-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background-color: var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .toggle-switch.active {
+            background-color: var(--success-color);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+        
+        .system-status {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-sm);
+        }
+        
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-icon.healthy {
+            background-color: var(--success-color);
+        }
+        
+        .status-icon.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .status-icon.error {
+            background-color: var(--danger-color);
+        }
+        
+        .status-label {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .settings-container {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="market-watch.html" class="nav-link">Market Watch</a>
+                    <a href="strategy-builder.html" class="nav-link">Strategy Builder</a>
+                    <a href="backtesting.html" class="nav-link">Backtesting</a>
+                    <a href="trade-execution.html" class="nav-link">Trade Execution</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="breadcrumb">
+                <a href="../index.html">← Back to Hub</a> / Settings
+            </div>
+
+            <div class="api-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Node.js API: Connected | Settings Sync: Active | Configuration: Ready</span>
+            </div>
+
+            <div class="settings-container">
+                <div class="main-settings">
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">API Keys & Exchanges</h2>
+                                <p class="section-description">Configure your exchange API keys for trading</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="addApiKey()">Add API Key</button>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="api-key-section">
+                                <div class="api-key-header">
+                                    <span class="api-key-name">Binance</span>
+                                    <div class="api-key-status">
+                                        <div class="status-dot connected"></div>
+                                        <span class="status-text">Connected</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>API Key</label>
+                                    <input type="password" value="••••••••••••••••••••••••••••••••" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Secret Key</label>
+                                    <input type="password" value="••••••••••••••••••••••••••••••••" readonly>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn btn-secondary btn-small" onclick="editApiKey('binance')">Edit</button>
+                                    <button class="btn btn-danger btn-small" onclick="deleteApiKey('binance')">Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="api-key-section">
+                                <div class="api-key-header">
+                                    <span class="api-key-name">Coinbase Pro</span>
+                                    <div class="api-key-status">
+                                        <div class="status-dot disconnected"></div>
+                                        <span class="status-text">Not Connected</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>API Key</label>
+                                    <input type="password" placeholder="Enter API key" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Secret Key</label>
+                                    <input type="password" placeholder="Enter secret key" readonly>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn btn-primary btn-small" onclick="editApiKey('coinbase')">Configure</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Risk Management</h2>
+                            <p class="section-description">Configure your risk tolerance and position sizing</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Risk Profile</label>
+                            <div class="risk-profile">
+                                <div class="risk-option" data-risk="conservative">
+                                    <div class="risk-title">Conservative</div>
+                                    <div class="risk-description">Low risk, steady returns</div>
+                                </div>
+                                <div class="risk-option selected" data-risk="moderate">
+                                    <div class="risk-title">Moderate</div>
+                                    <div class="risk-description">Balanced risk and reward</div>
+                                </div>
+                                <div class="risk-option" data-risk="aggressive">
+                                    <div class="risk-title">Aggressive</div>
+                                    <div class="risk-description">High risk, high potential</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="maxPositionSize">Max Position Size (%)</label>
+                                <input type="number" id="maxPositionSize" value="50" min="10" max="100" step="10">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxDrawdown">Max Drawdown (%)</label>
+                                <input type="number" id="maxDrawdown" value="15" min="5" max="50" step="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="stopLoss">Default Stop Loss (%)</label>
+                                <input type="number" id="stopLoss" value="5" min="1" max="20" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="takeProfit">Default Take Profit (%)</label>
+                                <input type="number" id="takeProfit" value="10" min="5" max="50" step="5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Notifications</h2>
+                            <p class="section-description">Configure how you receive alerts and updates</p>
+                        </div>
+                        
+                        <div class="notification-group">
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <div class="notification-title">Signal Alerts</div>
+                                    <div class="notification-description">Get notified when new trading signals are generated</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleNotification(this, 'signals')"></div>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <div class="notification-title">Trade Executions</div>
+                                    <div class="notification-description">Receive alerts when trades are executed</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleNotification(this, 'trades')"></div>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <div class="notification-title">Portfolio Updates</div>
+                                    <div class="notification-description">Daily portfolio performance summaries</div>
+                                </div>
+                                <div class="toggle-switch" onclick="toggleNotification(this, 'portfolio')"></div>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <div class="notification-title">Risk Warnings</div>
+                                    <div class="notification-description">Alerts when risk limits are approached</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleNotification(this, 'risk')"></div>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div class="notification-info">
+                                    <div class="notification-title">System Status</div>
+                                    <div class="notification-description">System health and maintenance notifications</div>
+                                </div>
+                                <div class="toggle-switch" onclick="toggleNotification(this, 'system')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h2 class="section-title">System Status</h2>
+                            <p class="section-description">Monitor your system health</p>
+                        </div>
+                        
+                        <div class="system-status">
+                            <div class="status-grid">
+                                <div class="status-item">
+                                    <div class="status-icon healthy"></div>
+                                    <span class="status-label">Node.js API</span>
+                                    <span class="status-value">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon healthy"></div>
+                                    <span class="status-label">Data Pipeline</span>
+                                    <span class="status-value">Active</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon healthy"></div>
+                                    <span class="status-label">Signal Engine</span>
+                                    <span class="status-value">Running</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon healthy"></div>
+                                    <span class="status-label">Database</span>
+                                    <span class="status-value">Connected</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon warning"></div>
+                                    <span class="status-label">Memory Usage</span>
+                                    <span class="status-value">78%</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon healthy"></div>
+                                    <span class="status-label">Uptime</span>
+                                    <span class="status-value">99.9%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Quick Actions</h2>
+                            <p class="section-description">Common system operations</p>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-primary btn-block" onclick="saveSettings()">Save Settings</button>
+                            <button class="btn btn-secondary btn-block" onclick="resetSettings()">Reset to Defaults</button>
+                            <button class="btn btn-info btn-block" onclick="exportSettings()">Export Config</button>
+                            <button class="btn btn-warning btn-block" onclick="restartSystem()">Restart System</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, and TypeScript.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupRiskProfile();
+            loadSettings();
+        });
+
+        // Setup risk profile selection
+        function setupRiskProfile() {
+            const riskOptions = document.querySelectorAll('.risk-option');
+            riskOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from siblings
+                    riskOptions.forEach(opt => opt.classList.remove('selected'));
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Update risk parameters based on selection
+                    updateRiskParameters(this.dataset.risk);
+                });
+            });
+        }
+
+        // Update risk parameters
+        function updateRiskParameters(riskLevel) {
+            const maxPosition = document.getElementById('maxPositionSize');
+            const maxDrawdown = document.getElementById('maxDrawdown');
+            const stopLoss = document.getElementById('stopLoss');
+            const takeProfit = document.getElementById('takeProfit');
+            
+            switch (riskLevel) {
+                case 'conservative':
+                    maxPosition.value = 25;
+                    maxDrawdown.value = 10;
+                    stopLoss.value = 3;
+                    takeProfit.value = 8;
+                    break;
+                case 'moderate':
+                    maxPosition.value = 50;
+                    maxDrawdown.value = 15;
+                    stopLoss.value = 5;
+                    takeProfit.value = 10;
+                    break;
+                case 'aggressive':
+                    maxPosition.value = 75;
+                    maxDrawdown.value = 25;
+                    stopLoss.value = 8;
+                    takeProfit.value = 15;
+                    break;
+            }
+        }
+
+        // Toggle notification
+        function toggleNotification(element, type) {
+            element.classList.toggle('active');
+            const isActive = element.classList.contains('active');
+            
+            console.log(`Notification ${type} ${isActive ? 'enabled' : 'disabled'}`);
+            
+            // Show feedback
+            const status = isActive ? 'enabled' : 'disabled';
+            alert(`Notification ${type} ${status}`);
+        }
+
+        // Add API key
+        function addApiKey() {
+            const exchange = prompt('Enter exchange name:');
+            if (exchange) {
+                alert(`Adding API key for ${exchange}...\n\nThis would open a configuration dialog to:\n1. Enter API credentials\n2. Test connection\n3. Save to Node.js backend\n4. Update system status`);
+            }
+        }
+
+        // Edit API key
+        function editApiKey(exchange) {
+            alert(`Editing API key for ${exchange}...\n\nThis would open a secure form to:\n1. Update API credentials\n2. Test new connection\n3. Save to Node.js backend\n4. Refresh connection status`);
+        }
+
+        // Delete API key
+        function deleteApiKey(exchange) {
+            if (confirm(`Are you sure you want to delete the API key for ${exchange}?`)) {
+                alert(`API key for ${exchange} deleted.\n\nThis would:\n1. Remove credentials from Node.js backend\n2. Update connection status\n3. Disable trading for this exchange`);
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            const settings = {
+                riskProfile: document.querySelector('.risk-option.selected').dataset.risk,
+                maxPositionSize: document.getElementById('maxPositionSize').value,
+                maxDrawdown: document.getElementById('maxDrawdown').value,
+                stopLoss: document.getElementById('stopLoss').value,
+                takeProfit: document.getElementById('takeProfit').value,
+                notifications: {
+                    signals: document.querySelector('[onclick*="signals"]').classList.contains('active'),
+                    trades: document.querySelector('[onclick*="trades"]').classList.contains('active'),
+                    portfolio: document.querySelector('[onclick*="portfolio"]').classList.contains('active'),
+                    risk: document.querySelector('[onclick*="risk"]').classList.contains('active'),
+                    system: document.querySelector('[onclick*="system"]').classList.contains('active')
+                }
+            };
+            
+            // Save to localStorage (simulating API call)
+            localStorage.setItem('tradingSettings', JSON.stringify(settings));
+            
+            alert('Settings saved successfully!\n\nThis would send the configuration to the Node.js API for:\n1. Validation\n2. Storage in database\n3. Application to running system\n4. Confirmation of changes');
+        }
+
+        // Reset settings
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to defaults?')) {
+                // Reset form values
+                document.getElementById('maxPositionSize').value = 50;
+                document.getElementById('maxDrawdown').value = 15;
+                document.getElementById('stopLoss').value = 5;
+                document.getElementById('takeProfit').value = 10;
+                
+                // Reset risk profile
+                document.querySelectorAll('.risk-option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelector('[data-risk="moderate"]').classList.add('selected');
+                
+                // Reset notifications
+                document.querySelectorAll('.toggle-switch').forEach(toggle => {
+                    if (toggle.onclick.toString().includes('signals') || 
+                        toggle.onclick.toString().includes('trades') || 
+                        toggle.onclick.toString().includes('risk')) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+                });
+                
+                alert('Settings reset to defaults.\n\nThis would:\n1. Reset all configuration values\n2. Save to Node.js backend\n3. Restart affected services\n4. Apply new settings');
+            }
+        }
+
+        // Export settings
+        function exportSettings() {
+            const settings = JSON.parse(localStorage.getItem('tradingSettings') || '{}');
+            const settingsJson = JSON.stringify(settings, null, 2);
+            
+            // Create download link
+            const blob = new Blob([settingsJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'trading-settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('Settings exported successfully!\n\nThis would download a JSON file containing:\n1. All current configuration\n2. API key references (not actual keys)\n3. Risk parameters\n4. Notification preferences');
+        }
+
+        // Restart system
+        function restartSystem() {
+            if (confirm('Are you sure you want to restart the system? This will temporarily interrupt trading.')) {
+                alert('System restart initiated...\n\nThis would:\n1. Stop all Node.js services\n2. Restart API server\n3. Reconnect to exchanges\n4. Resume signal generation\n5. Update system status');
+            }
+        }
+
+        // Load settings
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('tradingSettings') || '{}');
+            
+            if (settings.riskProfile) {
+                document.querySelectorAll('.risk-option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelector(`[data-risk="${settings.riskProfile}"]`).classList.add('selected');
+            }
+            
+            if (settings.maxPositionSize) {
+                document.getElementById('maxPositionSize').value = settings.maxPositionSize;
+            }
+            
+            if (settings.maxDrawdown) {
+                document.getElementById('maxDrawdown').value = settings.maxDrawdown;
+            }
+            
+            if (settings.stopLoss) {
+                document.getElementById('stopLoss').value = settings.stopLoss;
+            }
+            
+            if (settings.takeProfit) {
+                document.getElementById('takeProfit').value = settings.takeProfit;
+            }
+            
+            if (settings.notifications) {
+                Object.keys(settings.notifications).forEach(key => {
+                    const toggle = document.querySelector(`[onclick*="${key}"]`);
+                    if (toggle) {
+                        if (settings.notifications[key]) {
+                            toggle.classList.add('active');
+                        } else {
+                            toggle.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy Builder - AI Trading Signals MVP</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .strategy-form {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .indicator-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .indicator-card:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-primary);
+        }
+        
+        .indicator-card.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        .indicator-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .indicator-description {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+        
+        .signal-rules {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .rule-condition {
+            flex: 1;
+            font-family: monospace;
+            font-size: var(--font-size-sm);
+        }
+        
+        .rule-action {
+            flex: 1;
+            font-family: monospace;
+            font-size: var(--font-size-sm);
+            color: var(--primary-color);
+        }
+        
+        .rule-confidence {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .backtest-preview {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .preview-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-sm);
+        }
+        
+        .preview-metric {
+            text-align: center;
+            padding: var(--spacing-sm);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-sm);
+        }
+        
+        .preview-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .preview-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .indicator-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="market-watch.html" class="nav-link">Market Watch</a>
+                    <a href="backtesting.html" class="nav-link">Backtesting</a>
+                    <a href="trade-execution.html" class="nav-link">Trade Execution</a>
+                    <a href="settings.html" class="nav-link">Settings</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="breadcrumb">
+                <a href="../index.html">← Back to Hub</a> / Strategy Builder
+            </div>
+
+            <div class="api-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Node.js API: Connected | Strategy Engine: Active | Backtesting: Ready</span>
+            </div>
+
+            <form class="strategy-form" id="strategyForm">
+                <h2>Create AI Trading Strategy</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="strategyName">Strategy Name</label>
+                        <input type="text" id="strategyName" name="strategyName" placeholder="e.g., BTC RSI Strategy" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="strategyDescription">Description</label>
+                        <input type="text" id="strategyDescription" name="strategyDescription" placeholder="Brief description of the strategy">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="targetAsset">Target Asset</label>
+                        <select id="targetAsset" name="targetAsset" required>
+                            <option value="">Select Asset</option>
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="SOL">Solana (SOL)</option>
+                            <option value="SPY">S&P 500 (SPY)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="riskLevel">Risk Level</label>
+                        <select id="riskLevel" name="riskLevel" required>
+                            <option value="">Select Risk Level</option>
+                            <option value="conservative">Conservative</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="aggressive">Aggressive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>Technical Indicators</h3>
+                <div class="indicator-grid">
+                    <div class="indicator-card" data-indicator="rsi">
+                        <div class="indicator-title">RSI (Relative Strength Index)</div>
+                        <div class="indicator-description">Momentum oscillator for overbought/oversold conditions</div>
+                    </div>
+                    <div class="indicator-card" data-indicator="macd">
+                        <div class="indicator-title">MACD</div>
+                        <div class="indicator-description">Moving Average Convergence Divergence</div>
+                    </div>
+                    <div class="indicator-card" data-indicator="sma">
+                        <div class="indicator-title">SMA (Simple Moving Average)</div>
+                        <div class="indicator-description">Trend following indicator</div>
+                    </div>
+                    <div class="indicator-card" data-indicator="ema">
+                        <div class="indicator-title">EMA (Exponential Moving Average)</div>
+                        <div class="indicator-description">Weighted moving average</div>
+                    </div>
+                    <div class="indicator-card" data-indicator="bollinger">
+                        <div class="indicator-title">Bollinger Bands</div>
+                        <div class="indicator-description">Volatility and support/resistance</div>
+                    </div>
+                    <div class="indicator-card" data-indicator="stochastic">
+                        <div class="indicator-title">Stochastic Oscillator</div>
+                        <div class="indicator-description">Momentum indicator</div>
+                    </div>
+                </div>
+
+                <h3>Signal Rules</h3>
+                <div class="signal-rules">
+                    <div id="rulesList">
+                        <div class="rule-item">
+                            <div class="rule-condition">IF RSI < 30 AND Price > SMA(20)</div>
+                            <div class="rule-action">THEN BUY 50% of portfolio</div>
+                            <div class="rule-confidence">85%</div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-condition">IF RSI > 70 AND Price < SMA(20)</div>
+                            <div class="rule-action">THEN SELL 50% to USDT</div>
+                            <div class="rule-confidence">78%</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addRule()">Add Rule</button>
+                </div>
+
+                <h3>Backtest Preview</h3>
+                <div class="backtest-preview">
+                    <div class="preview-metrics">
+                        <div class="preview-metric">
+                            <div class="preview-value">65%</div>
+                            <div class="preview-label">Win Rate</div>
+                        </div>
+                        <div class="preview-metric">
+                            <div class="preview-value">1.8</div>
+                            <div class="preview-label">Profit Factor</div>
+                        </div>
+                        <div class="preview-metric">
+                            <div class="preview-value">-12%</div>
+                            <div class="preview-label">Max Drawdown</div>
+                        </div>
+                        <div class="preview-metric">
+                            <div class="preview-value">24%</div>
+                            <div class="preview-label">Annual Return</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="runBacktest()">Run Full Backtest</button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Strategy</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                </div>
+            </form>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, and TypeScript.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Strategy builder functionality
+        let selectedIndicators = [];
+        let strategyRules = [];
+
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved strategies from localStorage
+            loadSavedStrategies();
+            
+            // Set up indicator selection
+            const indicatorCards = document.querySelectorAll('.indicator-card');
+            indicatorCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const indicator = this.dataset.indicator;
+                    if (selectedIndicators.includes(indicator)) {
+                        selectedIndicators = selectedIndicators.filter(i => i !== indicator);
+                        this.classList.remove('selected');
+                    } else {
+                        selectedIndicators.push(indicator);
+                        this.classList.add('selected');
+                    }
+                    updateStrategyPreview();
+                });
+            });
+
+            // Form submission
+            document.getElementById('strategyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStrategy();
+            });
+        });
+
+        // Add new rule
+        function addRule() {
+            const rulesList = document.getElementById('rulesList');
+            const ruleItem = document.createElement('div');
+            ruleItem.className = 'rule-item';
+            ruleItem.innerHTML = `
+                <div class="rule-condition">
+                    <select onchange="updateRule(this)">
+                        <option value="rsi">RSI</option>
+                        <option value="macd">MACD</option>
+                        <option value="sma">SMA</option>
+                    </select>
+                    <select onchange="updateRule(this)">
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <input type="number" placeholder="30" onchange="updateRule(this)">
+                </div>
+                <div class="rule-action">
+                    <select onchange="updateRule(this)">
+                        <option value="BUY">BUY</option>
+                        <option value="SELL">SELL</option>
+                        <option value="HOLD">HOLD</option>
+                    </select>
+                    <input type="number" placeholder="50" onchange="updateRule(this)">
+                    <span>% of portfolio</span>
+                </div>
+                <div class="rule-confidence">75%</div>
+                <button type="button" class="btn btn-danger btn-small" onclick="removeRule(this)">Remove</button>
+            `;
+            rulesList.appendChild(ruleItem);
+        }
+
+        // Update rule
+        function updateRule(element) {
+            // Update rule logic here
+            console.log('Rule updated:', element.value);
+        }
+
+        // Remove rule
+        function removeRule(button) {
+            button.parentElement.remove();
+        }
+
+        // Update strategy preview
+        function updateStrategyPreview() {
+            // Update backtest preview based on selected indicators and rules
+            console.log('Selected indicators:', selectedIndicators);
+            console.log('Strategy rules:', strategyRules);
+        }
+
+        // Run backtest
+        function runBacktest() {
+            const strategyName = document.getElementById('strategyName').value;
+            const targetAsset = document.getElementById('targetAsset').value;
+            
+            if (!strategyName || !targetAsset) {
+                alert('Please fill in strategy name and target asset before running backtest.');
+                return;
+            }
+
+            // Simulate backtest API call
+            alert(`Running backtest for "${strategyName}" on ${targetAsset}...\n\nThis would call the Node.js API to:\n1. Fetch historical data\n2. Apply strategy rules\n3. Calculate performance metrics\n4. Return results for display`);
+        }
+
+        // Save strategy
+        function saveStrategy() {
+            const formData = new FormData(document.getElementById('strategyForm'));
+            const strategy = {
+                id: Date.now().toString(),
+                name: formData.get('strategyName'),
+                description: formData.get('strategyDescription'),
+                targetAsset: formData.get('targetAsset'),
+                riskLevel: formData.get('riskLevel'),
+                indicators: selectedIndicators,
+                rules: strategyRules,
+                createdAt: new Date().toISOString(),
+                isActive: false
+            };
+
+            // Save to localStorage (simulating API call)
+            const savedStrategies = JSON.parse(localStorage.getItem('tradingStrategies') || '[]');
+            savedStrategies.push(strategy);
+            localStorage.setItem('tradingStrategies', JSON.stringify(savedStrategies));
+
+            alert(`Strategy "${strategy.name}" saved successfully!\n\nThis would be sent to the Node.js API for:\n1. Validation\n2. Storage in database\n3. Integration with signal generation\n4. Backtesting preparation`);
+        }
+
+        // Load saved strategies
+        function loadSavedStrategies() {
+            const savedStrategies = JSON.parse(localStorage.getItem('tradingStrategies') || '[]');
+            console.log('Loaded strategies:', savedStrategies);
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('strategyForm').reset();
+            selectedIndicators = [];
+            strategyRules = [];
+            
+            // Reset indicator cards
+            document.querySelectorAll('.indicator-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Reset rules list
+            document.getElementById('rulesList').innerHTML = `
+                <div class="rule-item">
+                    <div class="rule-condition">IF RSI < 30 AND Price > SMA(20)</div>
+                    <div class="rule-action">THEN BUY 50% of portfolio</div>
+                    <div class="rule-confidence">85%</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-condition">IF RSI > 70 AND Price < SMA(20)</div>
+                    <div class="rule-action">THEN SELL 50% to USDT</div>
+                    <div class="rule-confidence">78%</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

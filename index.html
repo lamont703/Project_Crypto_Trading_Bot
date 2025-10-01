@@ -49,7 +49,7 @@
         .navigation-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: var(--spacing-lg);
+            gap: var(--spacing-xl);
             margin-bottom: var(--spacing-xl);
         }
         
@@ -57,40 +57,28 @@
             background-color: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: var(--spacing-lg);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-sm);
-            border-bottom: 2px solid var(--primary-color);
-        }
-        
-        .section-icon {
-            font-size: var(--font-size-2xl);
-            margin-right: var(--spacing-md);
+            padding: var(--spacing-xl);
         }
         
         .section-title {
-            font-size: var(--font-size-xl);
+            font-size: var(--font-size-2xl);
             font-weight: 600;
-            margin: 0;
+            margin-bottom: var(--spacing-md);
             color: var(--primary-color);
+            text-align: center;
         }
         
         .section-description {
+            text-align: center;
             color: var(--text-secondary);
-            margin-bottom: var(--spacing-lg);
-            line-height: var(--line-height-normal);
+            margin-bottom: var(--spacing-xl);
+            font-size: var(--font-size-lg);
         }
         
         .nav-cards {
             display: grid;
             grid-template-columns: 1fr;
-            gap: var(--spacing-md);
+            gap: var(--spacing-lg);
         }
         
         .nav-card {
@@ -152,70 +140,63 @@
         }
         
         .feature-icon {
-            font-size: var(--font-size-xl);
-            margin-top: var(--spacing-xs);
+            font-size: var(--font-size-2xl);
+            flex-shrink: 0;
         }
         
         .feature-content h3 {
             font-size: var(--font-size-lg);
             font-weight: 600;
-            margin-bottom: var(--spacing-xs);
+            margin-bottom: var(--spacing-sm);
             color: var(--text-primary);
         }
         
         .feature-content p {
             color: var(--text-secondary);
-            margin: 0;
-            line-height: var(--line-height-normal);
+            line-height: var(--line-height-relaxed);
         }
         
-        .footer {
+        .tech-stack {
             background-color: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            padding: var(--spacing-xl) 0;
-            text-align: center;
-            color: var(--text-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
         }
         
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .footer-title {
+        .tech-title {
             font-size: var(--font-size-lg);
             font-weight: 600;
             margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .tech-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius);
+        }
+        
+        .tech-name {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
             color: var(--text-primary);
         }
         
-        .footer-description {
-            margin-bottom: var(--spacing-lg);
-            line-height: var(--line-height-normal);
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: var(--spacing-lg);
-            flex-wrap: wrap;
-        }
-        
-        .footer-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .footer-link:hover {
-            text-decoration: underline;
+        .tech-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
         }
         
         @media (min-width: 768px) {
-            .navigation-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
             .nav-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -226,10 +207,6 @@
         }
         
         @media (min-width: 1024px) {
-            .navigation-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
             .nav-cards {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -242,292 +219,325 @@
 </head>
 <body>
     <div class="container">
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <h1 class="hero-title">🚀 Crypto Trading Bot Design Kit</h1>
-            <p class="hero-subtitle">Complete Mobile-First Trading Bot Design System</p>
-            <p class="hero-description">
-                A comprehensive design kit featuring documentation, wireframes, and interactive prototypes 
-                for a modern cryptocurrency trading bot application.
-            </p>
-        </div>
-        
-        <!-- Getting Started -->
-        <div class="getting-started">
-            <strong>Getting Started:</strong> Open any HTML file in your browser to explore the design kit. 
-            All files are self-contained and require no build step.
-        </div>
-        
-        <!-- Navigation Grid -->
-        <div class="navigation-grid">
-            <!-- Documentation Section -->
-            <div class="nav-section">
-                <div class="section-header">
-                    <div class="section-icon">📚</div>
-                    <h2 class="section-title">Documentation</h2>
-                </div>
-                <p class="section-description">
-                    Complete product specifications, technical architecture, and design guidelines.
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="#docs" class="nav-link">Documentation</a>
+                    <a href="#wireframes" class="nav-link">Wireframes</a>
+                    <a href="#prototypes" class="nav-link">Prototypes</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="hero-section">
+                <h1 class="hero-title">AI Trading Signals MVP</h1>
+                <p class="hero-subtitle">Node.js • React • TypeScript • Python</p>
+                <p class="hero-description">
+                    A comprehensive design kit for building an AI-powered trading signals platform. 
+                    Features real-time signal generation, paper trading, backtesting, and market analysis.
                 </p>
-                <div class="nav-cards">
-                    <a href="docs/README.md" class="nav-card" onclick="openMarkdown('docs/README.md', this)">
-                        <div class="nav-card-title">📖 README</div>
-                        <div class="nav-card-description">Project overview and getting started guide</div>
-                    </a>
-                    <a href="docs/product-spec.md" class="nav-card" onclick="openMarkdown('docs/product-spec.md', this)">
-                        <div class="nav-card-title">📋 Product Spec</div>
-                        <div class="nav-card-description">Requirements, personas, and user stories</div>
-                    </a>
-                    <a href="docs/architecture.md" class="nav-card" onclick="openMarkdown('docs/architecture.md', this)">
-                        <div class="nav-card-title">🏗️ Architecture</div>
-                        <div class="nav-card-description">Technical architecture and system design</div>
-                    </a>
-                    <a href="docs/data-model.md" class="nav-card" onclick="openMarkdown('docs/data-model.md', this)">
-                        <div class="nav-card-title">🗄️ Data Model</div>
-                        <div class="nav-card-description">Database schema and data structures</div>
-                    </a>
-                    <a href="docs/apis.md" class="nav-card" onclick="openMarkdown('docs/apis.md', this)">
-                        <div class="nav-card-title">🔌 APIs</div>
-                        <div class="nav-card-description">API specifications and endpoints</div>
-                    </a>
-                    <a href="docs/ux-copy.md" class="nav-card" onclick="openMarkdown('docs/ux-copy.md', this)">
-                        <div class="nav-card-title">✍️ UX Copy</div>
-                        <div class="nav-card-description">UI text, messages, and content guidelines</div>
-                    </a>
-                    <a href="docs/test-plan.md" class="nav-card" onclick="openMarkdown('docs/test-plan.md', this)">
-                        <div class="nav-card-title">🧪 Test Plan</div>
-                        <div class="nav-card-description">Testing strategy and acceptance criteria</div>
-                    </a>
+            </div>
+
+            <div class="getting-started">
+                🚀 Getting Started: Open any prototype screen to explore the interactive features!
+            </div>
+
+            <div class="tech-stack">
+                <h2 class="tech-title">Technology Stack</h2>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <div class="tech-name">Node.js</div>
+                        <div class="tech-description">Backend API & Signal Engine</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">React + TypeScript</div>
+                        <div class="tech-description">Frontend Interface</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">Python + Jupyter</div>
+                        <div class="tech-description">Data Analysis & Research</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">SQLite</div>
+                        <div class="tech-description">Local Data Storage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation-grid">
+                <!-- Documentation Section -->
+                <div class="nav-section" id="docs">
+                    <h2 class="section-title">📚 Documentation</h2>
+                    <p class="section-description">
+                        Comprehensive documentation covering product specifications, architecture, and implementation details.
+                    </p>
+                    <div class="nav-cards">
+                        <a href="docs/README.md" class="nav-card" onclick="openMarkdown('docs/README.md', this)">
+                            <div class="nav-card-title">📖 README</div>
+                            <div class="nav-card-description">Project overview and getting started guide</div>
+                        </a>
+                        <a href="docs/product-spec.md" class="nav-card" onclick="openMarkdown('docs/product-spec.md', this)">
+                            <div class="nav-card-title">📋 Product Specification</div>
+                            <div class="nav-card-description">Goals, personas, user stories, and requirements</div>
+                        </a>
+                        <a href="docs/architecture.md" class="nav-card" onclick="openMarkdown('docs/architecture.md', this)">
+                            <div class="nav-card-title">🏗️ Architecture</div>
+                            <div class="nav-card-description">Technical architecture and system design</div>
+                        </a>
+                        <a href="docs/data-model.md" class="nav-card" onclick="openMarkdown('docs/data-model.md', this)">
+                            <div class="nav-card-title">🗄️ Data Model</div>
+                            <div class="nav-card-description">Database schema and entity relationships</div>
+                        </a>
+                        <a href="docs/apis.md" class="nav-card" onclick="openMarkdown('docs/apis.md', this)">
+                            <div class="nav-card-title">🔌 API Documentation</div>
+                            <div class="nav-card-description">REST API endpoints and data structures</div>
+                        </a>
+                        <a href="docs/ux-copy.md" class="nav-card" onclick="openMarkdown('docs/ux-copy.md', this)">
+                            <div class="nav-card-title">💬 UX Copy</div>
+                            <div class="nav-card-description">User interface text and messaging</div>
+                        </a>
+                        <a href="docs/test-plan.md" class="nav-card" onclick="openMarkdown('docs/test-plan.md', this)">
+                            <div class="nav-card-title">🧪 Test Plan</div>
+                            <div class="nav-card-description">Testing strategy and acceptance criteria</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Wireframes Section -->
+                <div class="nav-section" id="wireframes">
+                    <h2 class="section-title">📐 Wireframes</h2>
+                    <p class="section-description">
+                        Low-fidelity wireframes outlining the basic layout and functionality of each screen.
+                    </p>
+                    <div class="nav-cards">
+                        <a href="wireframes/wireframes-overview.md" class="nav-card" onclick="openMarkdown('wireframes/wireframes-overview.md', this)">
+                            <div class="nav-card-title">📋 Wireframes Overview</div>
+                            <div class="nav-card-description">Guidelines and principles for wireframe design</div>
+                        </a>
+                        <a href="wireframes/screens/dashboard-wireframe.html" class="nav-card">
+                            <div class="nav-card-title">📊 Dashboard Wireframe</div>
+                            <div class="nav-card-description">Portfolio overview and key metrics layout</div>
+                        </a>
+                        <a href="wireframes/screens/market-watch-wireframe.html" class="nav-card">
+                            <div class="nav-card-title">📈 Market Watch Wireframe</div>
+                            <div class="nav-card-description">Market data display and chart layouts</div>
+                        </a>
+                        <a href="wireframes/screens/strategy-builder-wireframe.html" class="nav-card">
+                            <div class="nav-card-title">⚙️ Strategy Builder Wireframe</div>
+                            <div class="nav-card-description">Rule composition and strategy configuration</div>
+                        </a>
+                        <a href="wireframes/screens/backtesting-wireframe.html" class="nav-card">
+                            <div class="nav-card-title">📊 Backtesting Wireframe</div>
+                            <div class="nav-card-description">Strategy testing interface and results display</div>
+                        </a>
+                        <a href="wireframes/screens/trade-execution-wireframe.html" class="nav-card">
+                            <div class="nav-card-title">💹 Trade Execution Wireframe</div>
+                            <div class="nav-card-description">Order placement and trade management</div>
+                        </a>
+                        <a href="wireframes/screens/settings-wireframe.html" class="nav-card">
+                            <div class="nav-card-title">⚙️ Settings Wireframe</div>
+                            <div class="nav-card-description">User preferences and system configuration</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Prototypes Section -->
+                <div class="nav-section" id="prototypes">
+                    <h2 class="section-title">🎯 Interactive Prototypes</h2>
+                    <p class="section-description">
+                        High-fidelity interactive prototypes with real functionality and Node.js/React/TypeScript integration.
+                    </p>
+                    <div class="nav-cards">
+                        <a href="prototypes/dashboard-updated.html" class="nav-card">
+                            <div class="nav-card-title">�� Dashboard</div>
+                            <div class="nav-card-description">Live portfolio data, AI signals, and performance tracking</div>
+                        </a>
+                        <a href="prototypes/market-watch-updated.html" class="nav-card">
+                            <div class="nav-card-title">📈 Market Watch</div>
+                            <div class="nav-card-description">Real-time market data with signal integration</div>
+                        </a>
+                        <a href="prototypes/strategy-builder-updated.html" class="nav-card">
+                            <div class="nav-card-title">⚙️ Strategy Builder</div>
+                            <div class="nav-card-description">AI strategy creation with technical indicators</div>
+                        </a>
+                        <a href="prototypes/backtesting-updated.html" class="nav-card">
+                            <div class="nav-card-title">📊 Backtesting</div>
+                            <div class="nav-card-description">Strategy testing with performance metrics and charts</div>
+                        </a>
+                        <a href="prototypes/trade-execution-updated.html" class="nav-card">
+                            <div class="nav-card-title">💹 Trade Execution</div>
+                            <div class="nav-card-description">Paper trading with risk management and activity feed</div>
+                        </a>
+                        <a href="prototypes/news-sentiment-updated.html" class="nav-card">
+                            <div class="nav-card-title">📰 News & Sentiment</div>
+                            <div class="nav-card-description">AI-powered news analysis with sentiment scoring</div>
+                        </a>
+                        <a href="prototypes/settings-updated.html" class="nav-card">
+                            <div class="nav-card-title">⚙️ Settings</div>
+                            <div class="nav-card-description">API configuration, risk management, and system monitoring</div>
+                        </a>
+                    </div>
                 </div>
             </div>
             
-            <!-- Wireframes Section -->
-            <div class="nav-section">
-                <div class="section-header">
-                    <div class="section-icon">📐</div>
-                    <h2 class="section-title">Wireframes</h2>
-                </div>
-                <p class="section-description">
-                    Low-fidelity structural layouts and user flow diagrams.
-                </p>
-                <div class="nav-cards">
-                    <a href="wireframes/wireframes-overview.md" class="nav-card" onclick="openMarkdown('wireframes/wireframes-overview.md', this)">
-                        <div class="nav-card-title">📋 Overview</div>
-                        <div class="nav-card-description">Wireframe guidelines and principles</div>
-                    </a>
-                    <a href="wireframes/screens/dashboard-wireframe.html" class="nav-card">
-                        <div class="nav-card-title">📊 Dashboard</div>
-                        <div class="nav-card-description">Portfolio overview and performance metrics</div>
-                    </a>
-                    <a href="wireframes/screens/market-watch-wireframe.html" class="nav-card">
-                        <div class="nav-card-title">📈 Market Watch</div>
-                        <div class="nav-card-description">Real-time market data and price monitoring</div>
-                    </a>
-                    <a href="wireframes/screens/strategy-builder-wireframe.html" class="nav-card">
-                        <div class="nav-card-title">⚙️ Strategy Builder</div>
-                        <div class="nav-card-description">IF/THEN rule composer and strategy management</div>
-                    </a>
-                    <a href="wireframes/screens/backtesting-wireframe.html" class="nav-card">
-                        <div class="nav-card-title">📊 Backtesting</div>
-                        <div class="nav-card-description">Historical strategy testing and analysis</div>
-                    </a>
-                    <a href="wireframes/screens/trade-execution-wireframe.html" class="nav-card">
-                        <div class="nav-card-title">💹 Trade Execution</div>
-                        <div class="nav-card-description">Order placement and risk management</div>
-                    </a>
-                    <a href="wireframes/screens/settings-wireframe.html" class="nav-card">
-                        <div class="nav-card-title">⚙️ Settings</div>
-                        <div class="nav-card-description">User preferences and configuration</div>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Prototypes Section -->
-            <div class="nav-section">
-                <div class="section-header">
-                    <div class="section-icon">🎨</div>
-                    <h2 class="section-title">Prototypes</h2>
-                </div>
-                <p class="section-description">
-                    Interactive high-fidelity screen demonstrations with real functionality.
-                </p>
-                <div class="nav-cards">
-                    <a href="prototypes/dashboard.html" class="nav-card">
-                        <div class="nav-card-title">📊 Dashboard</div>
-                        <div class="nav-card-description">Live portfolio data and performance tracking</div>
-                    </a>
-                    <a href="prototypes/market-watch.html" class="nav-card">
-                        <div class="nav-card-title">📈 Market Watch</div>
-                        <div class="nav-card-description">Interactive market data with charts</div>
-                    </a>
-                    <a href="prototypes/strategy-builder.html" class="nav-card">
-                        <div class="nav-card-title">⚙️ Strategy Builder</div>
-                        <div class="nav-card-description">Visual rule builder with live preview</div>
-                    </a>
-                    <a href="prototypes/backtesting.html" class="nav-card">
-                        <div class="nav-card-title">📊 Backtesting</div>
-                        <div class="nav-card-description">Strategy testing with performance charts</div>
-                    </a>
-                    <a href="prototypes/trade-execution.html" class="nav-card">
-                        <div class="nav-card-title">💹 Trade Execution</div>
-                        <div class="nav-card-description">Order placement with risk management</div>
-                    </a>
-                    <a href="prototypes/news-sentiment.html" class="nav-card">
-                        <div class="nav-card-title">📰 News & Sentiment</div>
-                        <div class="nav-card-description">News feed with sentiment analysis</div>
-                    </a>
-                    <a href="prototypes/settings.html" class="nav-card">
-                        <div class="nav-card-title">⚙️ Settings</div>
-                        <div class="nav-card-description">User preferences and API configuration</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Features Section -->
-        <div class="features-section">
-            <h2 class="features-title">Key Features</h2>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">📱</div>
-                    <div class="feature-content">
-                        <h3>Mobile-First Design</h3>
-                        <p>Optimized for mobile devices with responsive layouts that scale from 375px to desktop.</p>
+            <!-- Features Section -->
+            <div class="features-section">
+                <h2 class="features-title">Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-content">
+                            <h3>AI Signal Generation</h3>
+                            <p>Real-time trading signals powered by technical indicators, sentiment analysis, and machine learning algorithms.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🌙</div>
-                    <div class="feature-content">
-                        <h3>Dark Mode Support</h3>
-                        <p>Automatic theme switching based on system preferences with smooth transitions.</p>
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-content">
+                            <h3>Mobile-First Design</h3>
+                            <p>Responsive design optimized for mobile devices with React/TypeScript frontend and Node.js backend.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">♿</div>
-                    <div class="feature-content">
-                        <h3>Accessibility Compliant</h3>
-                        <p>WCAG 2.1 AA compliant with keyboard navigation and screen reader support.</p>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-content">
+                            <h3>Paper Trading</h3>
+                            <p>Virtual portfolio management with real-time P&L tracking, risk management, and performance analytics.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-content">
-                        <h3>No Build Step</h3>
-                        <p>Pure HTML/CSS/JS with no external dependencies. Open any file in your browser.</p>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔬</div>
+                        <div class="feature-content">
+                            <h3>Backtesting Engine</h3>
+                            <p>Comprehensive strategy testing with historical data, performance metrics, and visualization tools.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">��</div>
-                    <div class="feature-content">
-                        <h3>Interactive Charts</h3>
-                        <p>Canvas-based chart rendering with real-time data updates and smooth animations.</p>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌙</div>
+                        <div class="feature-content">
+                            <h3>Dark Mode Support</h3>
+                            <p>Automatic dark/light theme switching with consistent design across all components and screens.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">💾</div>
-                    <div class="feature-content">
-                        <h3>Local Storage</h3>
-                        <p>Strategies and settings persist locally using browser storage APIs.</p>
+                    <div class="feature-item">
+                        <div class="feature-icon">♿</div>
+                        <div class="feature-content">
+                            <h3>Accessibility</h3>
+                            <p>WCAG 2.1 AA compliant with keyboard navigation, screen reader support, and high contrast ratios.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-content">
+                            <h3>Real-time Updates</h3>
+                            <p>Live data feeds, signal generation, and portfolio updates powered by Node.js WebSocket connections.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-content">
+                            <h3>Security</h3>
+                            <p>Secure API key management, data encryption, and comprehensive risk management controls.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h3>Market Analysis</h3>
+                            <p>Comprehensive market data, news sentiment analysis, and technical indicator calculations.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, TypeScript, and Python.</p>
+                <div class="footer-links">
+                    <a href="docs/README.md" class="footer-link" onclick="openMarkdown('docs/README.md', this)">Documentation</a>
+                    <a href="wireframes/wireframes-overview.md" class="footer-link" onclick="openMarkdown('wireframes/wireframes-overview.md', this)">Wireframes</a>
+                    <a href="prototypes/dashboard-updated.html" class="footer-link">Prototypes</a>
+                </div>
+            </div>
+        </footer>
     </div>
-    
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-content">
-            <h3 class="footer-title">Crypto Trading Bot Design Kit</h3>
-            <p class="footer-description">
-                A comprehensive design system for building modern cryptocurrency trading applications. 
-                This design kit demonstrates best practices in mobile-first design, accessibility, 
-                and user experience for financial applications.
-            </p>
-            <div class="footer-links">
-                <a href="docs/README.md" class="footer-link" onclick="openMarkdown('docs/README.md', this)">Documentation</a>
-                <a href="wireframes/wireframes-overview.md" class="footer-link" onclick="openMarkdown('wireframes/wireframes-overview.md', this)">Wireframes</a>
-                <a href="prototypes/dashboard.html" class="footer-link">Prototypes</a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Markdown Viewer Modal -->
-    <div class="modal" id="markdownModal">
-        <div class="modal-dialog" style="max-width: 800px;">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Documentation</h3>
-                <button class="modal-close" onclick="closeMarkdown()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="markdownContent">
-                    <!-- Markdown content will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="prototypes/app.js"></script>
+
     <script>
-        // Hub-specific functionality
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Wait for app to initialize
-            await new Promise(resolve => {
-                const checkApp = () => {
-                    if (window.cryptoBotApp) {
-                        resolve();
-                    } else {
-                        setTimeout(checkApp, 100);
-                    }
-                };
-                checkApp();
-            });
-            
-            console.log('Crypto Trading Bot Design Kit loaded successfully');
-        });
-        
+        // Markdown viewer functionality
         function openMarkdown(filePath, element) {
             event.preventDefault();
             
-            const modal = document.getElementById('markdownModal');
-            const title = document.getElementById('modalTitle');
-            const content = document.getElementById('markdownContent');
+            // Create a new window for markdown viewing
+            const newWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
             
-            // Set title based on file
-            const fileName = filePath.split('/').pop().replace('.md', '');
-            title.textContent = fileName.charAt(0).toUpperCase() + fileName.slice(1).replace('-', ' ');
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${filePath}</title>
+                    <link rel="stylesheet" href="../prototypes/components.css">
+                    <style>
+                        body { padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+                        .markdown-content { max-width: 800px; margin: 0 auto; }
+                        h1, h2, h3, h4, h5, h6 { color: var(--primary-color); margin-top: 2em; margin-bottom: 1em; }
+                        pre { background: var(--bg-secondary); padding: 1em; border-radius: 4px; overflow-x: auto; }
+                        code { background: var(--bg-secondary); padding: 0.2em 0.4em; border-radius: 3px; }
+                        blockquote { border-left: 4px solid var(--primary-color); padding-left: 1em; margin: 1em 0; }
+                        table { border-collapse: collapse; width: 100%; }
+                        th, td { border: 1px solid var(--border-color); padding: 0.5em; text-align: left; }
+                        th { background: var(--bg-secondary); }
+                    </style>
+                </head>
+                <body>
+                    <div class="markdown-content">
+                        <h1>Loading ${filePath}...</h1>
+                        <p>Please wait while the markdown content is loaded.</p>
+                    </div>
+                </body>
+                </html>
+            `);
             
-            // Show loading state
-            content.innerHTML = '<div class="loading-state"><div class="loading-icon">⏳</div><div class="loading-text">Loading documentation...</div></div>';
-            modal.classList.add('show');
-            
-            // Load markdown content
-            window.markdownViewer.loadMarkdownFile(filePath)
-                .then(html => {
-                    content.innerHTML = html;
+            // Fetch and display markdown content
+            fetch(filePath)
+                .then(response => response.text())
+                .then(content => {
+                    // Simple markdown rendering (basic implementation)
+                    const htmlContent = content
+                        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                        .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+                        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                        .replace(/\*(.*)\*/gim, '<em>$1</em>')
+                        .replace(/`(.*)`/gim, '<code>$1</code>')
+                        .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
+                        .replace(/\n/gim, '<br>');
+                    
+                    newWindow.document.querySelector('.markdown-content').innerHTML = htmlContent;
                 })
                 .catch(error => {
-                    console.error('Error loading markdown:', error);
-                    content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><div class="empty-state-text">Error loading documentation</div><div class="empty-state-subtext">Please try again later</div></div>';
+                    newWindow.document.querySelector('.markdown-content').innerHTML = `
+                        <h1>Error Loading ${filePath}</h1>
+                        <p>Could not load the markdown file: ${error.message}</p>
+                        <p>Please check that the file exists and try again.</p>
+                    `;
                 });
         }
-        
-        function closeMarkdown() {
-            const modal = document.getElementById('markdownModal');
-            modal.classList.remove('show');
+
+        // Theme handling
+        function initializeTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
         }
-        
-        // Close modal when clicking outside
-        document.getElementById('markdownModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeMarkdown();
-            }
-        });
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeMarkdown();
-            }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
         });
     </script>
 </body>

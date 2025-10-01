@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Execution - AI Trading Signals MVP</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .trade-form {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+        
+        .form-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .toggle-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .toggle-option {
+            flex: 1;
+            padding: var(--spacing-sm);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            background-color: var(--bg-primary);
+            transition: all var(--transition-fast);
+        }
+        
+        .toggle-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .toggle-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        .order-preview {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .preview-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .preview-status {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .preview-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-sm);
+        }
+        
+        .preview-item {
+            background-color: var(--bg-primary);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+        }
+        
+        .preview-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .preview-value {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .activity-feed {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .feed-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .feed-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+        
+        .activity-icon.buy {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+        }
+        
+        .activity-icon.sell {
+            background-color: var(--danger-color);
+            color: var(--text-inverse);
+        }
+        
+        .activity-icon.info {
+            background-color: var(--info-color);
+            color: var(--text-inverse);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .activity-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .activity-time {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        
+        .portfolio-summary {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-sm);
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: var(--spacing-sm);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-sm);
+        }
+        
+        .summary-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .summary-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .preview-details {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="market-watch.html" class="nav-link">Market Watch</a>
+                    <a href="strategy-builder.html" class="nav-link">Strategy Builder</a>
+                    <a href="backtesting.html" class="nav-link">Backtesting</a>
+                    <a href="settings.html" class="nav-link">Settings</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="breadcrumb">
+                <a href="../index.html">← Back to Hub</a> / Trade Execution
+            </div>
+
+            <div class="api-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Node.js API: Connected | Paper Trading: Active | Order Engine: Ready</span>
+            </div>
+
+            <div class="portfolio-summary">
+                <h3>Portfolio Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value">$10,500</div>
+                        <div class="summary-label">Total Value</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">+$500</div>
+                        <div class="summary-label">Total P&L</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">$2,500</div>
+                        <div class="summary-label">Available Cash</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">3</div>
+                        <div class="summary-label">Open Positions</div>
+                    </div>
+                </div>
+            </div>
+
+            <form class="trade-form" id="tradeForm">
+                <h2>Place Trade Order</h2>
+                
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="section-title">Order Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="asset">Asset</label>
+                                <select id="asset" name="asset" required>
+                                    <option value="">Select Asset</option>
+                                    <option value="BTC">Bitcoin (BTC)</option>
+                                    <option value="ETH">Ethereum (ETH)</option>
+                                    <option value="SOL">Solana (SOL)</option>
+                                    <option value="SPY">S&P 500 (SPY)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="orderType">Order Type</label>
+                                <select id="orderType" name="orderType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="BUY">Buy</option>
+                                    <option value="SELL">Sell</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" id="quantity" name="quantity" step="0.001" min="0.001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price ($)</label>
+                                <input type="number" id="price" name="price" step="0.01" min="0.01" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Risk Management</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="stopLoss">Stop Loss ($)</label>
+                                <input type="number" id="stopLoss" name="stopLoss" step="0.01" min="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="takeProfit">Take Profit ($)</label>
+                                <input type="number" id="takeProfit" name="takeProfit" step="0.01" min="0.01">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="timeInTrade">Time in Trade (hours)</label>
+                                <input type="number" id="timeInTrade" name="timeInTrade" min="1" max="168" value="24">
+                            </div>
+                            <div class="form-group">
+                                <label>Stablecoin Conversion</label>
+                                <div class="toggle-group">
+                                    <div class="toggle-option" data-value="false">Disabled</div>
+                                    <div class="toggle-option selected" data-value="true">Enabled</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-preview" id="orderPreview" style="display: none;">
+                    <div class="preview-header">
+                        <h3 class="preview-title">Order Preview</h3>
+                        <span class="preview-status">Ready to Execute</span>
+                    </div>
+                    <div class="preview-details">
+                        <div class="preview-item">
+                            <div class="preview-label">Asset</div>
+                            <div class="preview-value" id="previewAsset">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Type</div>
+                            <div class="preview-value" id="previewType">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Quantity</div>
+                            <div class="preview-value" id="previewQuantity">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Price</div>
+                            <div class="preview-value" id="previewPrice">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Total Value</div>
+                            <div class="preview-value" id="previewTotal">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Stop Loss</div>
+                            <div class="preview-value" id="previewStopLoss">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Take Profit</div>
+                            <div class="preview-value" id="previewTakeProfit">-</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Time Limit</div>
+                            <div class="preview-value" id="previewTimeLimit">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="previewOrder()">Preview Order</button>
+                    <button type="submit" class="btn btn-primary">Execute Order (Paper Trade)</button>
+                    <button type="button" class="btn btn-danger" onclick="resetForm()">Reset</button>
+                </div>
+            </form>
+
+            <div class="activity-feed">
+                <div class="feed-header">
+                    <h2 class="feed-title">Trading Activity</h2>
+                    <div class="feed-actions">
+                        <button class="btn btn-secondary btn-small" onclick="clearActivity()">Clear</button>
+                        <button class="btn btn-primary btn-small" onclick="refreshActivity()">Refresh</button>
+                    </div>
+                </div>
+                <div id="activityList">
+                    <!-- Activity items will be loaded here -->
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, and TypeScript.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mock activity data
+        const mockActivity = [
+            {
+                id: 'activity_001',
+                type: 'buy',
+                title: 'Order Executed',
+                description: 'BUY 0.1 BTC at $45,000',
+                timestamp: '2024-01-20T14:30:00Z'
+            },
+            {
+                id: 'activity_002',
+                type: 'sell',
+                title: 'Order Executed',
+                description: 'SELL 0.5 ETH at $2,400',
+                timestamp: '2024-01-20T14:25:00Z'
+            },
+            {
+                id: 'activity_003',
+                type: 'info',
+                title: 'Signal Generated',
+                description: 'New BUY signal for BTC with 85% confidence',
+                timestamp: '2024-01-20T14:20:00Z'
+            },
+            {
+                id: 'activity_004',
+                type: 'info',
+                title: 'Portfolio Updated',
+                description: 'Portfolio value: $10,500 (+$500)',
+                timestamp: '2024-01-20T14:15:00Z'
+            }
+        ];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadActivity();
+            setupFormValidation();
+            setupToggleGroup();
+        });
+
+        // Setup form validation
+        function setupFormValidation() {
+            const form = document.getElementById('tradeForm');
+            const inputs = form.querySelectorAll('input, select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updatePreview);
+                input.addEventListener('change', updatePreview);
+            });
+        }
+
+        // Setup toggle group
+        function setupToggleGroup() {
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from siblings
+                    this.parentElement.querySelectorAll('.toggle-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        // Update order preview
+        function updatePreview() {
+            const asset = document.getElementById('asset').value;
+            const orderType = document.getElementById('orderType').value;
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+            const stopLoss = document.getElementById('stopLoss').value;
+            const takeProfit = document.getElementById('takeProfit').value;
+            const timeInTrade = document.getElementById('timeInTrade').value;
+
+            if (asset && orderType && quantity && price) {
+                const total = parseFloat(quantity) * parseFloat(price);
+                
+                document.getElementById('previewAsset').textContent = asset;
+                document.getElementById('previewType').textContent = orderType;
+                document.getElementById('previewQuantity').textContent = quantity;
+                document.getElementById('previewPrice').textContent = '$' + parseFloat(price).toLocaleString();
+                document.getElementById('previewTotal').textContent = '$' + total.toLocaleString();
+                document.getElementById('previewStopLoss').textContent = stopLoss ? '$' + parseFloat(stopLoss).toLocaleString() : 'None';
+                document.getElementById('previewTakeProfit').textContent = takeProfit ? '$' + parseFloat(takeProfit).toLocaleString() : 'None';
+                document.getElementById('previewTimeLimit').textContent = timeInTrade + ' hours';
+                
+                document.getElementById('orderPreview').style.display = 'block';
+            } else {
+                document.getElementById('orderPreview').style.display = 'none';
+            }
+        }
+
+        // Preview order
+        function previewOrder() {
+            updatePreview();
+            if (document.getElementById('orderPreview').style.display === 'block') {
+                alert('Order preview updated. Review the details before executing.');
+            } else {
+                alert('Please fill in all required fields to preview the order.');
+            }
+        }
+
+        // Execute order
+        function executeOrder() {
+            const formData = new FormData(document.getElementById('tradeForm'));
+            const order = {
+                id: 'order_' + Date.now(),
+                asset: formData.get('asset'),
+                type: formData.get('orderType'),
+                quantity: parseFloat(formData.get('quantity')),
+                price: parseFloat(formData.get('price')),
+                stopLoss: formData.get('stopLoss') ? parseFloat(formData.get('stopLoss')) : null,
+                takeProfit: formData.get('takeProfit') ? parseFloat(formData.get('takeProfit')) : null,
+                timeInTrade: parseInt(formData.get('timeInTrade')),
+                stablecoinConversion: document.querySelector('.toggle-option.selected').dataset.value === 'true',
+                timestamp: new Date().toISOString(),
+                status: 'FILLED'
+            };
+
+            // Add to activity feed
+            addActivityItem({
+                type: order.type.toLowerCase(),
+                title: 'Order Executed',
+                description: `${order.type} ${order.quantity} ${order.asset} at $${order.price.toLocaleString()}`,
+                timestamp: order.timestamp
+            });
+
+            // Show success message
+            alert(`Order executed successfully!\n\n${order.type} ${order.quantity} ${order.asset} at $${order.price.toLocaleString()}\nTotal Value: $${(order.quantity * order.price).toLocaleString()}\n\nThis was a paper trade executed via the Node.js API.`);
+
+            // Reset form
+            resetForm();
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('tradeForm').reset();
+            document.getElementById('orderPreview').style.display = 'none';
+            
+            // Reset toggle group
+            document.querySelectorAll('.toggle-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector('.toggle-option[data-value="true"]').classList.add('selected');
+        }
+
+        // Load activity
+        function loadActivity() {
+            const activityList = document.getElementById('activityList');
+            activityList.innerHTML = '';
+
+            mockActivity.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-icon ${activity.type}">
+                        ${activity.type === 'buy' ? 'B' : activity.type === 'sell' ? 'S' : 'I'}
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-description">${activity.description}</div>
+                    </div>
+                    <div class="activity-time">
+                        ${new Date(activity.timestamp).toLocaleTimeString()}
+                    </div>
+                `;
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        // Add activity item
+        function addActivityItem(activity) {
+            const activityList = document.getElementById('activityList');
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+            activityItem.innerHTML = `
+                <div class="activity-icon ${activity.type}">
+                    ${activity.type === 'buy' ? 'B' : activity.type === 'sell' ? 'S' : 'I'}
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${activity.title}</div>
+                    <div class="activity-description">${activity.description}</div>
+                </div>
+                <div class="activity-time">
+                    ${new Date(activity.timestamp).toLocaleTimeString()}
+                </div>
+            `;
+            activityList.insertBefore(activityItem, activityList.firstChild);
+        }
+
+        // Clear activity
+        function clearActivity() {
+            if (confirm('Are you sure you want to clear all activity?')) {
+                document.getElementById('activityList').innerHTML = '';
+            }
+        }
+
+        // Refresh activity
+        function refreshActivity() {
+            loadActivity();
+            alert('Activity feed refreshed from Node.js API.');
+        }
+
+        // Form submission
+        document.getElementById('tradeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            executeOrder();
+        });
+    </script>
+</body>
+</html>

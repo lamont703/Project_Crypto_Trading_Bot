@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AI Trading Signals MVP</title>
+    <link rel="stylesheet" href="components.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .portfolio-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .signal-status {
+            background: linear-gradient(135deg, var(--success-color) 0%, var(--info-color) 100%);
+            color: var(--text-inverse);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .signal-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .signal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .positions-section, .trades-section, .signals-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .section-action {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .signal-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .signal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .signal-type {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .signal-confidence {
+            background-color: var(--success-color);
+            color: var(--text-inverse);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+        
+        .signal-details {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .signal-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .btn-small {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-xs);
+            border-radius: var(--radius-sm);
+        }
+        
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .metric-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .status-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .portfolio-overview {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .performance-metrics {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">AI Trading Signals MVP</h1>
+                <nav class="header-nav">
+                    <a href="market-watch.html" class="nav-link">Market Watch</a>
+                    <a href="strategy-builder.html" class="nav-link">Strategy Builder</a>
+                    <a href="backtesting.html" class="nav-link">Backtesting</a>
+                    <a href="trade-execution.html" class="nav-link">Trade Execution</a>
+                    <a href="settings.html" class="nav-link">Settings</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="breadcrumb">
+                <a href="../index.html">← Back to Hub</a> / Dashboard
+            </div>
+
+            <div class="signal-status">
+                <div class="signal-indicator">
+                    <div class="signal-dot"></div>
+                    <span>AI Signal Generation Active</span>
+                </div>
+                <p style="margin: var(--spacing-sm) 0 0 0; opacity: 0.9;">Real-time analysis running on Node.js backend</p>
+            </div>
+
+            <div class="api-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Node.js API: Connected | Data Pipeline: Active | Signal Engine: Running</span>
+            </div>
+
+            <div class="performance-metrics">
+                <div class="metric-card">
+                    <div class="metric-value" id="totalValue">$10,500</div>
+                    <div class="metric-label">Portfolio Value</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalPnl">+$500</div>
+                    <div class="metric-label">Total P&L</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="winRate">65%</div>
+                    <div class="metric-label">Signal Win Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="activeSignals">3</div>
+                    <div class="metric-label">Active Signals</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="main-content">
+                    <div class="signals-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Latest AI Signals</h2>
+                            <a href="market-watch.html" class="section-action">View All</a>
+                        </div>
+                        <div id="signalsList">
+                            <!-- Signals will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="positions-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Open Positions</h2>
+                            <a href="trade-execution.html" class="section-action">View All</a>
+                        </div>
+                        <div id="positionsList">
+                            <!-- Positions will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="trades-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Trades</h2>
+                            <a href="trade-execution.html" class="section-action">View All</a>
+                        </div>
+                        <div id="tradesList">
+                            <!-- Trades will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 AI Trading Signals MVP. Built with Node.js, React, and TypeScript.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mock data for MVP demonstration
+        const mockData = {
+            signals: [
+                {
+                    id: 'signal_001',
+                    type: 'BUY',
+                    asset: 'BTC',
+                    confidence: 85,
+                    price: 46500,
+                    timestamp: '2024-01-20T14:30:00Z',
+                    indicators: 'RSI: 28, MACD: Bullish, SMA: Above 20',
+                    reasoning: 'Oversold conditions with bullish momentum'
+                },
+                {
+                    id: 'signal_002',
+                    type: 'SELL',
+                    asset: 'ETH',
+                    confidence: 72,
+                    price: 2400,
+                    timestamp: '2024-01-20T14:25:00Z',
+                    indicators: 'RSI: 75, MACD: Bearish, SMA: Below 50',
+                    reasoning: 'Overbought conditions with bearish divergence'
+                },
+                {
+                    id: 'signal_003',
+                    type: 'HOLD',
+                    asset: 'SOL',
+                    confidence: 60,
+                    price: 95,
+                    timestamp: '2024-01-20T14:20:00Z',
+                    indicators: 'RSI: 45, MACD: Neutral, SMA: Sideways',
+                    reasoning: 'Neutral conditions, waiting for confirmation'
+                }
+            ],
+            positions: [
+                {
+                    id: 'position_001',
+                    asset: 'BTC',
+                    side: 'long',
+                    size: 0.5,
+                    entryPrice: 45000,
+                    currentPrice: 46500,
+                    unrealizedPnl: 750,
+                    unrealizedPnlPercent: 3.3,
+                    entryTime: '2024-01-20T10:30:00Z',
+                    timeInTrade: 3.5,
+                    stopLoss: 42750,
+                    takeProfit: 49500,
+                    isActive: true
+                },
+                {
+                    id: 'position_002',
+                    asset: 'ETH',
+                    side: 'short',
+                    size: 1.0,
+                    entryPrice: 2500,
+                    currentPrice: 2400,
+                    unrealizedPnl: 100,
+                    unrealizedPnlPercent: 4.0,
+                    entryTime: '2024-01-20T12:15:00Z',
+                    timeInTrade: 2.0,
+                    stopLoss: 2625,
+                    takeProfit: 2250,
+                    isActive: true
+                }
+            ],
+            trades: [
+                {
+                    id: 'trade_001',
+                    asset: 'BTC',
+                    type: 'BUY',
+                    quantity: 0.1,
+                    price: 45000,
+                    timestamp: '2024-01-20T10:30:00Z',
+                    pnl: 150,
+                    pnlPercent: 3.3,
+                    status: 'FILLED'
+                },
+                {
+                    id: 'trade_002',
+                    asset: 'ETH',
+                    type: 'SELL',
+                    quantity: 0.5,
+                    price: 2500,
+                    timestamp: '2024-01-20T12:15:00Z',
+                    pnl: 50,
+                    pnlPercent: 4.0,
+                    status: 'FILLED'
+                },
+                {
+                    id: 'trade_003',
+                    asset: 'SOL',
+                    type: 'BUY',
+                    quantity: 5.0,
+                    price: 90,
+                    timestamp: '2024-01-20T08:45:00Z',
+                    pnl: 25,
+                    pnlPercent: 5.6,
+                    status: 'FILLED'
+                }
+            ]
+        };
+
+        // Load signals
+        function loadSignals() {
+            const signalsList = document.getElementById('signalsList');
+            signalsList.innerHTML = '';
+
+            mockData.signals.forEach(signal => {
+                const signalCard = document.createElement('div');
+                signalCard.className = 'signal-card';
+                signalCard.innerHTML = `
+                    <div class="signal-header">
+                        <span class="signal-type">${signal.type} ${signal.asset}</span>
+                        <span class="signal-confidence">${signal.confidence}%</span>
+                    </div>
+                    <div class="signal-details">
+                        <div>Price: $${signal.price.toLocaleString()}</div>
+                        <div>${signal.indicators}</div>
+                        <div>${signal.reasoning}</div>
+                        <div>Time: ${new Date(signal.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                    <div class="signal-actions">
+                        <button class="btn btn-primary btn-small" onclick="executeSignal('${signal.id}')">Execute</button>
+                        <button class="btn btn-secondary btn-small" onclick="viewSignalDetails('${signal.id}')">Details</button>
+                    </div>
+                `;
+                signalsList.appendChild(signalCard);
+            });
+        }
+
+        // Load positions
+        function loadPositions() {
+            const positionsList = document.getElementById('positionsList');
+            positionsList.innerHTML = '';
+
+            mockData.positions.forEach(position => {
+                const positionCard = document.createElement('div');
+                positionCard.className = 'card';
+                positionCard.innerHTML = `
+                    <div class="card-header">
+                        <h3>${position.asset} ${position.side.toUpperCase()}</h3>
+                        <span class="badge ${position.unrealizedPnl >= 0 ? 'badge-success' : 'badge-danger'}">
+                            ${position.unrealizedPnl >= 0 ? '+' : ''}$${position.unrealizedPnl.toFixed(2)}
+                        </span>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Size:</label>
+                                <span>${position.size} ${position.asset}</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Entry Price:</label>
+                                <span>$${position.entryPrice.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Current Price:</label>
+                                <span>$${position.currentPrice.toLocaleString()}</span>
+                            </div>
+                            <div class="form-group">
+                                <label>P&L:</label>
+                                <span class="${position.unrealizedPnl >= 0 ? 'text-success' : 'text-danger'}">
+                                    ${position.unrealizedPnl >= 0 ? '+' : ''}$${position.unrealizedPnl.toFixed(2)} (${position.unrealizedPnlPercent.toFixed(1)}%)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Time in Trade:</label>
+                                <span>${position.timeInTrade} hours</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Stop Loss:</label>
+                                <span>$${position.stopLoss.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                positionsList.appendChild(positionCard);
+            });
+        }
+
+        // Load trades
+        function loadTrades() {
+            const tradesList = document.getElementById('tradesList');
+            tradesList.innerHTML = '';
+
+            mockData.trades.forEach(trade => {
+                const tradeCard = document.createElement('div');
+                tradeCard.className = 'card';
+                tradeCard.innerHTML = `
+                    <div class="card-header">
+                        <h3>${trade.asset} ${trade.type}</h3>
+                        <span class="badge ${trade.pnl >= 0 ? 'badge-success' : 'badge-danger'}">
+                            ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
+                        </span>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantity:</label>
+                                <span>${trade.quantity} ${trade.asset}</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Price:</label>
+                                <span>$${trade.price.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>P&L:</label>
+                                <span class="${trade.pnl >= 0 ? 'text-success' : 'text-danger'}">
+                                    ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)} (${trade.pnlPercent.toFixed(1)}%)
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label>Status:</label>
+                                <span class="badge badge-success">${trade.status}</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Time:</label>
+                                <span>${new Date(trade.timestamp).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                tradesList.appendChild(tradeCard);
+            });
+        }
+
+        // Signal actions
+        function executeSignal(signalId) {
+            const signal = mockData.signals.find(s => s.id === signalId);
+            if (signal) {
+                alert(`Executing ${signal.type} signal for ${signal.asset} at $${signal.price.toLocaleString()}\n\nThis would trigger the Node.js API to place a paper trade.`);
+            }
+        }
+
+        function viewSignalDetails(signalId) {
+            const signal = mockData.signals.find(s => s.id === signalId);
+            if (signal) {
+                alert(`Signal Details:\n\nAsset: ${signal.asset}\nType: ${signal.type}\nPrice: $${signal.price.toLocaleString()}\nConfidence: ${signal.confidence}%\nIndicators: ${signal.indicators}\nReasoning: ${signal.reasoning}\nTimestamp: ${new Date(signal.timestamp).toLocaleString()}`);
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSignals();
+            loadPositions();
+            loadTrades();
+            
+            // Simulate real-time updates
+            setInterval(() => {
+                // Update metrics
+                const totalValue = document.getElementById('totalValue');
+                const totalPnl = document.getElementById('totalPnl');
+                const winRate = document.getElementById('winRate');
+                const activeSignals = document.getElementById('activeSignals');
+                
+                // Simulate small changes
+                const currentValue = parseFloat(totalValue.textContent.replace('$', '').replace(',', ''));
+                const newValue = currentValue + (Math.random() - 0.5) * 100;
+                totalValue.textContent = '$' + newValue.toLocaleString();
+                
+                const currentPnl = parseFloat(totalPnl.textContent.replace('$', '').replace('+', ''));
+                const newPnl = currentPnl + (Math.random() - 0.5) * 50;
+                totalPnl.textContent = (newPnl >= 0 ? '+' : '') + '$' + newPnl.toFixed(0);
+                totalPnl.className = 'metric-value ' + (newPnl >= 0 ? 'text-success' : 'text-danger');
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
